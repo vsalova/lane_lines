@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# For the lab 1 reference folder 
+lab_1_ref/sandbox/build
+lab_1_ref/camera_calibration/build
+lab_1_ref/lane_line_detection/build
+lab_1_ref/lane_line_detection/.vs
+
+# Mac ds store
+.DS_Store
