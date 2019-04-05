@@ -1,9 +1,7 @@
 # Notes
 Keep all notes here and project ideas here
 
-### Calvin March 25th
-
-------------------------------------------------------
+## Calvin March 25th
 
 ##### Spatial CNN
 * See paper
@@ -81,6 +79,8 @@ How to compare lane lines
 Correct versus preducted 
 
 ------------------------------------------------------
+
+## Calvin April 5th
 
 Time for clustering -- bottleneck
 K-means, sperical K-means | choose starting points smartly.
