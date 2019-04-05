@@ -39,3 +39,6 @@ lab_1_ref/lane_line_detection/.vs
 
 # Mac ds store
 .DS_Store
+
+# Ignore datasets
+datasets/CULane/*
