@@ -32,7 +32,7 @@ Lab1 pipeline
 * Finding out the accuracy / speed of the lab 1 
 * Clustering the Hough space implementation
   * Figure out best clustering algorithm (DBScan HDBScan?)
-* Benchmark best models to the best models
+* Benchmark best models to the best models (LaneNet + others?)
 
 ##### After Presentations
 
