@@ -16,6 +16,7 @@ Spatial CNN - [link](https://arxiv.org/abs/1712.06080)
 ICNet - [link](https://arxiv.org/abs/1704.08545)
 Semantic segmentation, not lane-line detection
 Downsamples a large input image by 1/2 and 1/4 and performs semantic segmentation on the smallest images first, then uses a "cascade feature fusion unit" to enhance the segmentation of the downsamples image to refine the segmentation in the higher resolution image.
+ICNet achieves memory and speed improvements in the order of 5x to previous segmantic segmentation models while maintaining good accuracy. (tables 4,5,6 in the paper)
 
 LaneNet - [link](https://arxiv.org/abs/1807.01726)
 
