@@ -90,3 +90,12 @@ K-means, sperical K-means | choose starting points smartly.
 
 ------------------------------------------------------
 
+## Calvin April 6th
+
+Datasets
+* CULane Dataset - from Beijing - Going to use- annotated - https://xingangpan.github.io/projects/CULane.html
+* Caltech lane line dataset - US - not annotated - http://www.mohamedaly.info/datasets/caltech-lanes
+* Use own camera - Calvin has dash cam - not annotated
+* TuSimple - annotated - https://github.com/TuSimple/tusimple-benchmark/issues/3
+
+
