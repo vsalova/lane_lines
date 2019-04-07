@@ -1,11 +1,13 @@
 # Problem Discription
 
-We will be working on the laneline detection problem. Laneline detection is a visial recognition problem where the task is to recognize where each of the laneline are in a scene.
+We will be working on the laneline detection problem. Laneline detection is a visial recognition problem where the task is to recognize where each of the laneline are in a scene. There are many various techniques for laneline detection, but the main issues are the speed and accuracy tradeoff: many algorithms that provide accurate results are often too slow to run in real-time. Some of the accuracy could be sacrificed in order to allow real-time laneline detection, but it is still a problem to have have accurate enough results that are computed fast enough for real time detection. 
+
+
 Our plan is to work off of the pipeline from lab 1 from last quarter and to develop an alternative solution for parts where necessary to increase accuracy and speed.
 
 # Motivation
 
-Laneline detection is one of the most fundamental parts to autonomous driving. Following lane lines is the most basic part of a driving solution, ontop of which path planning and other parts is built. Knowing this, the laneline detection module must be robust, reliable, and accurate.
+Laneline detection is one of the most fundamental parts to autonomous driving. Following lane lines is the most basic part of a driving solution, on top of which path planning and other parts is built. Knowing this, the laneline detection module must be robust, reliable, and accurate.
 
 Even for non-self driving cars, laneline detection is the main component behind lane departure warning systems, and automatic steering in a highway enviornment.
 
@@ -25,7 +27,7 @@ DeepLabV3+ - [link](https://arxiv.org/abs/1802.02611)
 Lab1 pipeline
 
 
-# Timeline / Quarter Goals
+# Timeline / Quarters Goals
 
 
 #### Before Presentation
