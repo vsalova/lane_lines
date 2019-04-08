@@ -43,11 +43,20 @@ Overall, DeepLab is one of the best semantic segmentation models currently avail
 DeepLabV1 and V2 both run at around 1 fps, which is way too slow.
 DeepLabV3 training on the PASCAL VOC 2012 semantic segmentation dataset with a Tesla K80 GPU took 3.65 days to train.
 
-Lab 1 pipeline
+---------------------------------------------------------------------
 
+Entire lane line detection pipeline. 
+Lanenet attempts to do end-to-end lane line detection with two neural networks, training on a 1080 ti. The first neural network handles binary and instance segmentation to produce a collection of pixels associated with a lane. These pixels are passed to the Hnet, which fits a curve to the lane line pixels. This approach looks promising but would require a ground up restructuring of our pipeline. Perhaps this should be attempted after we develop something to show xmotors?
+DeepLabV3+ - [link](https://arxiv.org/abs/1802.02611)
+
+Lab 1 pipeline
+Pipeline pieces alongside proposed modules:
+* Perspective Transform, Use neural network 
+* Color/gradient thresholds
+* Window Search -Clustering, Spatial CNN, Kalman Filter
+Lanenet proposes an entire pipeline, and such its implementation would require a new pipeline to be developed form the ground up.
 
 # Timeline / Quarters Goals
-
 
 #### Before Presentation
 
