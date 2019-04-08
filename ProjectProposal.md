@@ -21,7 +21,27 @@ ICNet achieves memory and speed improvements in the order of 5x to previous sema
 
 LaneNet - [link](https://arxiv.org/abs/1807.01726)
 
-DeepLabV3+ - [link](https://arxiv.org/abs/1802.02611)
+DeepLabVx
+* [DeepLabV1](https://arxiv.org/pdf/1412.7062.pdf)
+DeepLabV1 uses "atrous convolutions" as one part of its model, these convolutions include a "rate" which is the step size between each pixel in the kernel. A rate of 1 is a normal convolution, and a rate of 2 with a 3x3 kernel would be like a 5x5 kernel but with the 2nd and 4th rows and columns not included.
+DeepLabV1 also uses Fully Connected Conditional Random Fields to refine the rough localization of semantic parts from the Deep CNN parts. Basically, the output of the DCNN looks like a heatmap, and Fully Connected Conditional Random Fields find the boundary of all the segments.
+DeepLabV1 talks about using Multi-Scale Prediction, which accomplishes the same thing as Fully Connected Conditional Random Fields but not as well.
+
+* [DeepLabV2](?)
+Adds Atrous Spatial Pyrimid Pooling (ASPP) to help find objects of different size and for computational efficiency.
+
+* [DeepLabV3](https://arxiv.org/pdf/1706.05587.pdf)
+Better ASPP with image level features
+Adds batch normalization parameters for training
+
+* [DeepLabV3+](https://arxiv.org/abs/1802.02611)
+Adds a decoder module that refines segmentation along object boundaries, which has the ability to choose between precision and run-time.
+
+---------------------------------------------------------------------
+
+Overall, DeepLab is one of the best semantic segmentation models currently available.
+DeepLabV1 and V2 both run at around 1 fps, which is way too slow.
+DeepLabV3 training on the PASCAL VOC 2012 semantic segmentation dataset with a Tesla K80 GPU took 3.65 days to train.
 
 Lab 1 pipeline
 
