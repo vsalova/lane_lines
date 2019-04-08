@@ -97,6 +97,9 @@ Datasets
 * Caltech lane line dataset - US - not annotated - http://www.mohamedaly.info/datasets/caltech-lanes
 * Use own camera - Calvin has dash cam - not annotated
 * TuSimple - annotated - https://github.com/TuSimple/tusimple-benchmark/issues/3
+* Cityscapes (semantic segmentation)
+* CamVid (semantic segmentation)
+* COCO-stuff (semantic segmentation)
 
 ## Daniel April 6th
 Pipeline pieces alongside proposed modules:
