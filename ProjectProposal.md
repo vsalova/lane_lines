@@ -49,7 +49,7 @@ DeepLabV3 training on the PASCAL VOC 2012 semantic segmentation dataset with a T
 
 ---------------------------------------------------------------------
 
-###Lab 1 pipeline
+### Lab 1 pipeline
 
 Pipeline pieces alongside proposed modules:
 
