@@ -20,11 +20,16 @@ Downsamples a large input image by 1/2 and 1/4 and performs semantic segmentatio
 ICNet achieves memory and speed improvements in the order of 5x to previous semantic segmentation models while maintaining good accuracy. (tables 4,5,6 in the paper)
 
 LaneNet - [link](https://arxiv.org/abs/1807.01726)
-
+Entire lane line detection pipeline. 
+Lanenet attempts to do end-to-end lane line detection with two neural networks, training on a 1080 ti. The first neural network handles binary and instance segmentation to produce a collection of pixels associated with a lane. These pixels are passed to the Hnet, which fits a curve to the lane line pixels. This approach looks promising but would require a ground up restructuring of our pipeline. Perhaps this should be attempted after we develop something to show xmotors?
 DeepLabV3+ - [link](https://arxiv.org/abs/1802.02611)
 
 Lab 1 pipeline
-
+Pipeline pieces alongside proposed modules:
+* Perspective Transform, Use neural network 
+* Color/gradient thresholds
+* Window Search -Clustering, Spatial CNN, Kalman Filter
+Lanenet proposes an entire pipeline, and such its implementation would require a new pipeline to be developed form the ground up.
 
 # Timeline / Quarters Goals
 
