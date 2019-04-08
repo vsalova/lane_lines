@@ -98,4 +98,11 @@ Datasets
 * Use own camera - Calvin has dash cam - not annotated
 * TuSimple - annotated - https://github.com/TuSimple/tusimple-benchmark/issues/3
 
+## Daniel April 6th
+Pipeline pieces alongside proposed modules:
+* Perspective Transform, Use neural network 
+* Color/gradient thresholds
+* Window Search -Clustering, Spatial CNN, Kalman Filter
+Lanenet proposes an entire pipeline, and such its implementation would require a new pipeline to be developed form the ground up.
 
+Lanenet attempts to do end-to-end lane line detection with two neural networks. The first neural network handles binary and instance segmentation to produce a collection of pixels associated with a lane. These pixels are passed to the Hnet, which fits a curve to the lane line pixels. This approach looks promising but would require a ground up restructuring of our pipeline. Perhaps this should be attempted after we develop something to show xmotors?
