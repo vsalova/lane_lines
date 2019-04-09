@@ -109,3 +109,18 @@ Pipeline pieces alongside proposed modules:
 Lanenet proposes an entire pipeline, and such its implementation would require a new pipeline to be developed form the ground up.
 
 Lanenet attempts to do end-to-end lane line detection with two neural networks. The first neural network handles binary and instance segmentation to produce a collection of pixels associated with a lane. These pixels are passed to the Hnet, which fits a curve to the lane line pixels. This approach looks promising but would require a ground up restructuring of our pipeline. Perhaps this should be attempted after we develop something to show xmotors?
+
+------------------------------------------------------
+
+## Everyone April 8th
+
+TA Meeting
+
+Since it's traditional computer vision, don't need labeled lanelines. Should work with any video.
+Graph of clustering algorithms and time
+##### NEED MORE WORK ON THREASHOLDING PART
+Benchmark on embedded system
+##### MAKE ON DOCKER
+What labraries using for clustering
+FPS is what for lab1?
+OpenCV for GPU
