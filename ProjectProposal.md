@@ -1,6 +1,6 @@
 # Problem Discription
 
-We will be working on the lane line detection problem. Lane line detection is a visual recognition problem where the task is to recognize where each of the lane line are in a scene. There are many various techniques for lane line detection, but the main issues are the speed and accuracy tradeoff: many algorithms that provide accurate results are often too slow to run in real-time. Some of the accuracy could be sacrificed in order to allow real-time lane line detection, but it is still a problem to have have accurate enough results that are computed fast enough for real time detection. 
+We will be working on the lane line detection problem. Lane line detection is a visual recognition problem where the task is to recognize where each of the lane line are in a scene. There are many various techniques for lane line detection, but the main issues is the speed and accuracy tradeoff: many algorithms that provide accurate results are often too slow to run in real-time. Some of the accuracy could be sacrificed in order to allow real-time lane line detection, but it is still a problem to have have accurate enough results that are computed fast enough for real time detection. 
 
 
 Our plan is to work off of the pipeline from lab 1 from last quarter and to develop an alternative solution for parts where necessary to increase accuracy and speed, while keeping the same general structure of the code. 
