@@ -10,25 +10,27 @@ TODO WRITE ABOUT
 
 ### Instructions
 
-1. Download `Dockerfile` from this repository
+1. Download the `Dockerfile` file from this repository
 
-2. create a docker image from the Dockerfile:  
-`docker build -t _____DOCKERFILE____`
+2. Navigate to the directory of the downloaded `Dockerfile` file
 
-2. create a docker container from this image:  
-`???`
+3. create a docker image from the Dockerfile:  
+`docker build -t lane_lines .`  
+note that `lane_lines` will be the name of the docker image create, so you can name it however you want.  
+If you run `docker images` you should see an image with the tag `lane_lines`
 
-3. Start and run the container
-```
-DOCKER START CONTAINER
-DOCKER RUN
-or
-DOCKER EXEC?
-```
+4. create a docker container from this image:  
+`docker create -it --name=ll lane_lines`  
+The `--name=ll` creates a container with the name `ll`, which you can also change however you want.  
+After running this command, if you type `docker ps -a`, you should see the created container.
 
-4. Navigate to `DIRECTORY OF PARENT DIRECTORY TO PLACE REPO FOLDER`
+5. Start and run the container  
+`docker start ll`  
+`docker exec ll /bin/bash`
 
-5. Clone this repo: `git clone https://github.com/vsalova/lane_lines.git lanelines`
+6. Navigate to home: `cd /home`
+
+7. Clone this repo: `git clone https://github.com/vsalova/lane_lines.git lanelines`
 
 ## Running
 
