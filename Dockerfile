@@ -8,4 +8,4 @@ RUN git clone https://github.com/lava/matplotlib-cpp.git
 RUN cp matplotlib-cpp/matplotlibcpp.h /usr/include/
 RUN rm -rf matplotlib-cpp
 RUN cd ~
-RUN git clone https://github.com/vsalova/lane_lines.git lanelines
+#RUN git clone https://github.com/vsalova/lane_lines.git lanelines

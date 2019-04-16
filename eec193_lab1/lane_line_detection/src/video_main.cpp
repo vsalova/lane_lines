@@ -90,6 +90,7 @@ int main(int argc, char* argv[]) {
 	catch(Exception e){
 		imshow("Frame", binary_warped);
   		cv::waitKey(0);
+        video.write(new_frame);
   		cap.release();
   		video.release();
 	}
