@@ -37,8 +37,21 @@ lab_1_ref/camera_calibration/build
 lab_1_ref/lane_line_detection/build
 lab_1_ref/lane_line_detection/.vs
 
+eec193_lab1/sandbox/build
+eec193_lab1/camera_calibration/build
+eec193_lab1/lane_line_detection/build
+eec193_lab1/lane_line_detection/.vs
+
+merged_lab1/sandbox/build
+merged_lab1/camera_calibration/build
+merged_lab1/lane_line_detection/build
+merged_lab1/lane_line_detection/.vs
+
+
 # Mac ds store
 .DS_Store
 
 # Ignore datasets
 datasets/CULane/*
+
+
