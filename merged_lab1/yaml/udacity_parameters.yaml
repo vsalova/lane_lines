@@ -1,0 +1,27 @@
+%YAML:1.0
+---
+distortion coefficients: !!opencv-matrix
+   rows: 1
+   cols: 5
+   dt: d
+   data: [ -2.4455595944306568e-01, -4.9517050504746293e-02,
+       -5.2304731811059170e-04, 4.4462778810033400e-05,
+       5.3529223771528626e-02 ]
+camera matrix: !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [ 1.1572804427300055e+03, 0., 6.6304326796357770e+02, 0.,
+       1.1519309352134180e+03, 3.8800746037850746e+02, 0., 0., 1. ]
+
+# Order: bottom left, top left, top right, bottom right
+source points: [ 595., 449.,
+                 205., 720.,
+                 1105., 720.,
+                 681., 449. ]
+
+# Order: bottom left, top left, top right, bottom right
+destination points: [ 300., 0.,
+                      300., 720.,
+                      972., 720.,
+                      974., 0. ]
