@@ -124,3 +124,10 @@ Benchmark on embedded system
 What labraries using for clustering
 FPS is what for lab1?
 OpenCV for GPU
+
+## Daniel April 16th
+Clustering algorithms/libraries:
+Dbscan in sklearn
+Kmeans clustering in sklearn
+Kmediam clustering? See this paper: https://www.openu.ac.il/lists/mediaserver_documents/academic/cs/ClusteringOfLines.pdf
+Use this for finding datasets: http://cs.joensuu.fi/sipu/datasets/
