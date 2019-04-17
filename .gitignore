@@ -32,20 +32,20 @@
 *.app
 
 # For the lab 1 reference folder 
-lab_1_ref/sandbox/build
-lab_1_ref/camera_calibration/build
-lab_1_ref/lane_line_detection/build
-lab_1_ref/lane_line_detection/.vs
+lab1/lab1_Daniel_Calvin/sandbox/build
+lab1/lab1_Daniel_Calvin/camera_calibration/build
+lab1/lab1_Daniel_Calvin/lane_line_detection/build
+lab1/lab1_Daniel_Calvin/lane_line_detection/.vs
 
-eec193_lab1/sandbox/build
-eec193_lab1/camera_calibration/build
-eec193_lab1/lane_line_detection/build
-eec193_lab1/lane_line_detection/.vs
+lab1/lab1_Victoria/sandbox/build
+lab1/lab1_Victoria/camera_calibration/build
+lab1/lab1_Victoria/lane_line_detection/build
+lab1/lab1_Victoria/lane_line_detection/.vs
 
-merged_lab1/sandbox/build
-merged_lab1/camera_calibration/build
-merged_lab1/lane_line_detection/build
-merged_lab1/lane_line_detection/.vs
+lab1/lab1_merged/sandbox/build
+lab1/lab1_merged/camera_calibration/build
+lab1/lab1_merged/lane_line_detection/build
+lab1/lab1_merged/lane_line_detection/.vs
 
 
 # Mac ds store

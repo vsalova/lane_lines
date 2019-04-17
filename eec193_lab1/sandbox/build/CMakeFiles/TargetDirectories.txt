@@ -1,3 +1,0 @@
-/root/lanelinedetectioncpp/sandbox/build/CMakeFiles/rebuild_cache.dir
-/root/lanelinedetectioncpp/sandbox/build/CMakeFiles/edit_cache.dir
-/root/lanelinedetectioncpp/sandbox/build/CMakeFiles/main.dir
