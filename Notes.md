@@ -131,3 +131,24 @@ Dbscan in sklearn
 Kmeans clustering in sklearn
 Kmediam clustering? See this paper: https://www.openu.ac.il/lists/mediaserver_documents/academic/cs/ClusteringOfLines.pdf
 Use this for finding datasets: http://cs.joensuu.fi/sipu/datasets/
+
+## Everyone April 16th
+
+Explore deep learning approach -- Xmotors is interested in this area
+Pair programming -- triplet programming good
+
+Having cards that involve researching stuff or exploring stuff -- keep a document in the repo about the process, results, conclusions
+
+TUSimple dataset -- download
+https://github.com/TuSimple/tusimple-benchmark/issues/3
+
+Issues with training Spatial CNN - ask Teja, Sam
+
+Different github projects for different parts of pipeline -- deep learning approach and traditional approach
+
+DeepLab
+Adams algo -- DeepLab and also post processing
+
+LaneNet is crap
+
+Region masking in traditional computer vision
