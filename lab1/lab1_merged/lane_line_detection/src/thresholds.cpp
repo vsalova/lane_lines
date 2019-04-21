@@ -28,7 +28,7 @@ void abs_sobel_thresh(cv::Mat &src, cv::Mat &dst, char orient, int sobel_kernel 
    */
   dst = cv::abs(dst);                                    // make it absolute
   cv::normalize(dst, dst, 0, 255, NORM_MINMAX, CV_8UC1); // normalize
-  dst = thresh_min<dst & thresh_max> dst;                // applying threshold
+  dst = (thresh_min < dst) & (thresh_max > dst);                // applying threshold
 }
 
 void sobel_mag_dir_thresh(cv::Mat &src, cv::Mat &mag, cv::Mat &dir, int sobel_kernel, int mag_thresh_min = 40, int mag_thresh_max = 100, float dir_thresh_min = 0.7, float dir_thresh_max = 1.3)
@@ -47,8 +47,8 @@ void sobel_mag_dir_thresh(cv::Mat &src, cv::Mat &mag, cv::Mat &dir, int sobel_ke
 
   cv::cartToPolar(gradx, grady, mag, dir);
   cv::normalize(mag, mag, 0, 255, NORM_MINMAX, CV_8UC1); // normalize the magnitude
-  mag = mag_thresh_min<mag & mag_thresh_max> mag;        // applying threshold
-  dir = dir_thresh_min<dir & dir_thresh_max> dir;        // applying threshold
+  mag = (mag_thresh_min < mag) & (mag_thresh_max > mag);        // applying threshold
+  dir = (dir_thresh_min < dir) & (dir_thresh_max > dir);        // applying threshold
 }
 
 /*
