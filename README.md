@@ -38,3 +38,19 @@ After running this command, if you type `docker ps -a`, you should see the creat
 
 All different ways to run stuff
 
+
+
+# Orginal Lane Line Detection Instructions
+
+The original lane line lab from January 2019 is located in `lab1\lab1_merged`
+
+## Installation Requirement
+
+* cmake [download page](https://cmake.org/download/)
+
+
+
+## Build
+
+
+## Run
