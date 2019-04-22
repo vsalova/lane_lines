@@ -114,21 +114,22 @@
 #include "cv_helper.hpp"
 #include "overloader.hpp"
 
+// TODO: WHY THE COMMENTED OUT PART ABOVE?
+
 void print_cv_exception(cv::Exception& e);
 
 int main(int argc, char *argv[])
 {
-    if (argc != 5)
-    {
-        std::cerr << "Usage: ./video_main <path_to_matrix> <path_to_yellow> <path_to_white> <path_to_video.mp4> \n";
+    if (argc != 5) {
+        std::cerr << "Usage: ./video_main <path_to_matrix> <path_to_yellow> <path_to_white> <path_to_video.mp4>\n";
         return 1;
     }
 
     // Collect arguments
     std::string file_matrix = argv[1];
     std::string file_yellow = argv[2];
-    std::string file_white = argv[3];
-    std::string file_video = argv[4];
+    std::string file_white  = argv[3];
+    std::string file_video  = argv[4];
 
     //Create video file
     cv::FileStorage file(file_matrix, cv::FileStorage::READ);
@@ -206,7 +207,6 @@ int main(int argc, char *argv[])
         //cv::imshow("warped perspective", transformed);
         //cv::waitKey();    // Pause at every frame
         video.write(summed);
-
 
         // Press  ESC on keyboard to exit
         char c = (char) waitKey(25);
