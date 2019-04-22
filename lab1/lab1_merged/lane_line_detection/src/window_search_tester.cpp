@@ -15,6 +15,7 @@ const double xm_per_pix = 3.7 / 700;
 const double ym_per_pix = 30. / 720;
 const int LANE_ORDER = 2;
 
+// TODO: purspose of this file? Why is it all commented out
 int main(int argc, char *argv[])
 {
 
