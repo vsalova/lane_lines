@@ -77,8 +77,8 @@ print('finished hdbscan')
 #debacl_data = benchmark_algorithm(dataset_sizes,
 #                                  debacl.geom_tree.geomTree, (5, 5), {'verbose':False})
 
-agglomerative = sklearn.cluster.AgglomerativeClustering(10)
-agg_data = benchmark_algorithm(dataset_sizes,
+#agglomerative = sklearn.cluster.AgglomerativeClustering(10)
+#agg_data = benchmark_algorithm(dataset_sizes,
                                agglomerative.fit, (), {}, sample_size=4)
 print('finished agglomerative')
 spectral = sklearn.cluster.SpectralClustering(10)
@@ -107,8 +107,8 @@ sns.regplot(x='x', y='y', data=scipy_single_data, order=2,
 #            label='DeBaCl Geom Tree', x_estimator=np.mean)
 sns.regplot(x='x', y='y', data=spectral_data, order=2,
             label='Sklearn Spectral', x_estimator=np.mean)
-sns.regplot(x='x', y='y', data=agg_data, order=2,
-            label='Sklearn Agglomerative', x_estimator=np.mean)
+#sns.regplot(x='x', y='y', data=agg_data, order=2,
+#            label='Sklearn Agglomerative', x_estimator=np.mean)
 sns.regplot(x='x', y='y', data=ap_data, order=2,
             label='Sklearn Affinity Propagation', x_estimator=np.mean)
 plt.gca().axis([0, 34000, 0, 120])
