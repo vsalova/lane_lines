@@ -79,8 +79,8 @@ print('finished hdbscan')
 
 #agglomerative = sklearn.cluster.AgglomerativeClustering(10)
 #agg_data = benchmark_algorithm(dataset_sizes,
-                               agglomerative.fit, (), {}, sample_size=4)
-print('finished agglomerative')
+#                               agglomerative.fit, (), {}, sample_size=4)
+#print('finished agglomerative')
 spectral = sklearn.cluster.SpectralClustering(10)
 spectral_data = benchmark_algorithm(dataset_sizes,
                                     spectral.fit, (), {}, sample_size=6)
