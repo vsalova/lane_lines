@@ -111,6 +111,7 @@ sns.regplot(x='x', y='y', data=spectral_data, order=2,
 #            label='Sklearn Agglomerative', x_estimator=np.mean)
 sns.regplot(x='x', y='y', data=ap_data, order=2,
             label='Sklearn Affinity Propagation', x_estimator=np.mean)
+plt.figure(figsize=(22,14))
 plt.gca().axis([0, 34000, 0, 120])
 plt.gca().set_xlabel('Number of data points')
 plt.gca().set_ylabel('Time taken to cluster (s)')
