@@ -136,8 +136,8 @@ std::vector<std::pair<double, double>> generate_waypoints(cv::Mat& window_img, c
             mpair.second = (bottom-yval) * ym_per_pix;
             waypoints_meters.push_back(mpair);
 
-            cout << "x: " << midx << endl;
-            cout << "y: " << yval << endl;
+            //std::cout << "x: " << midx << endl;
+            //std::cout << "y: " << yval << endl;
             if (i == newx){
                 newx += (int)((fitx1.rows*0.95 - fitx1.rows*0.05)/7);
             }
