@@ -13,6 +13,7 @@ import seaborn as sns
 sns.set_context('poster')
 sns.set_palette('Paired', 10)
 sns.set_color_codes()
+plt.figure(figsize=(22,14))
 
 def benchmark_algorithm(dataset_sizes, cluster_function, function_args, function_kwds,
                         dataset_dimension=10, dataset_n_clusters=10, max_time=45, sample_size=2):
@@ -79,8 +80,8 @@ print('finished hdbscan')
 
 #agglomerative = sklearn.cluster.AgglomerativeClustering(10)
 #agg_data = benchmark_algorithm(dataset_sizes,
-                               agglomerative.fit, (), {}, sample_size=4)
-print('finished agglomerative')
+#                               agglomerative.fit, (), {}, sample_size=4)
+#print('finished agglomerative')
 spectral = sklearn.cluster.SpectralClustering(10)
 spectral_data = benchmark_algorithm(dataset_sizes,
                                     spectral.fit, (), {}, sample_size=6)
