@@ -13,6 +13,7 @@ import seaborn as sns
 sns.set_context('poster')
 sns.set_palette('Paired', 10)
 sns.set_color_codes()
+plt.figure(figsize=(22,14))
 
 def benchmark_algorithm(dataset_sizes, cluster_function, function_args, function_kwds,
                         dataset_dimension=10, dataset_n_clusters=10, max_time=45, sample_size=2):
@@ -111,7 +112,6 @@ sns.regplot(x='x', y='y', data=spectral_data, order=2,
 #            label='Sklearn Agglomerative', x_estimator=np.mean)
 sns.regplot(x='x', y='y', data=ap_data, order=2,
             label='Sklearn Affinity Propagation', x_estimator=np.mean)
-plt.figure(figsize=(22,14))
 plt.gca().axis([0, 34000, 0, 120])
 plt.gca().set_xlabel('Number of data points')
 plt.gca().set_ylabel('Time taken to cluster (s)')
