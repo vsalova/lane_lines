@@ -25,6 +25,7 @@ The `--name=ll` creates a container with the name `ll`, which you can also chang
 After running this command, if you type `docker ps -a`, you should see the created container.
 
 5. create a docker container from this image and mount it to your local lanelines repository: `docker run -it --name=ll --privileged -v <path to a local repo>:/root/ll lane_lines /bin/bash`. To run the docker container, make sure to do: `xhost + <IP>`, then start the docker container, and then to enter it, type: `docker exec -it -e DISPLAY=<IP>:0.0 ll /bin/bash`
+	
 
 5. Start and run the container  
 `docker start ll`  
@@ -68,3 +69,5 @@ Run any of the executables
 * `lane_line_detection/build/thresholds_tester INPUTS HERE`
 * `lane_line_detection/build/video_main INPUTS HERE`
 * `lane_line_detection/build/window_search_tester INPUTS HERE`
+
+You can run the program after building by executing `./make_video.sh` 
