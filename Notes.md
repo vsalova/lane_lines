@@ -171,3 +171,5 @@ Optuna -- training hyper parameters
 * OpenCV gpu implementation -- research how much speed up
 
 * openmp -- speed up code with for loops
+
+* Ask Adam how he was trying to add lab1 to GPU
