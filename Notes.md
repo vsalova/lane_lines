@@ -173,3 +173,9 @@ Optuna -- training hyper parameters
 * openmp -- speed up code with for loops
 
 * Ask Adam how he was trying to add lab1 to GPU
+
+* Sam offered his personal computer to train on with (team viewer) 1080Ti 16GB VRAM
+
+#### To have a real time updates on the model being trained
+
+`watch -n1 nvidia-smi`
