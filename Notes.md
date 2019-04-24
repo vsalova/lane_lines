@@ -152,3 +152,22 @@ Adams algo -- DeepLab and also post processing
 LaneNet is crap
 
 Region masking in traditional computer vision
+
+## Calvin, Daniel, Teja April 23rd
+
+Do deep learning approach, let train over long time
+Focus on POST PROCESSING
+Get segmentation from deep learning model
+
+* When make cards, convert them to issues
+
+* Dont use lanenet
+
+* train deep lab or icnet
+
+* training on server -- try to train multiple models simultaneously until running out of 
+Optuna -- training hyper parameters
+
+* OpenCV gpu implementation -- research how much speed up
+
+* openmp -- speed up code with for loops
