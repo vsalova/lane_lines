@@ -54,4 +54,5 @@ lab1/lab1_merged/lane_line_detection/.vs
 # Ignore datasets
 datasets/CULane/*
 
-
+# Ignore core dumps
+core
