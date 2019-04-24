@@ -10,6 +10,19 @@
 #include "cv_helper.hpp"
 #include "overloader.hpp"
 
+unsigned int num_frames = 0;
+clock_t total_time = 0;
+clock_t total_time_undistort = 0;
+clock_t total_time_warp = 0;
+clock_t total_time_thresh = 0;
+clock_t total_time_convert_color = 0;
+clock_t total_time_find_peaks = 0;
+clock_t total_time_window_search = 0;
+clock_t total_time_waypoints = 0;
+clock_t total_time_distort_back = 0;
+clock_t total_time_add_weighted = 0;
+
+
 void print_cv_exception(cv::Exception& e) {
     std::cout << "exception caught: " << e.what() << std::endl;
     std::cout << "ERR: " << e.err << std::endl;
@@ -19,10 +32,35 @@ void print_cv_exception(cv::Exception& e) {
     std::cout << "MESSAGE: " << e.msg << std::endl;
 }
 
-void print_benchmark_progress(clock_t total, unsigned int num_frames) {
-    float time_seconds = (float) total / CLOCKS_PER_SEC;
-    float fps = (num_frames == 0) ? std::numeric_limits<float>::infinity() : num_frames / time_seconds;
-    std::cout << "Total time (seconds): " << time_seconds << "\tFPS: " << fps << std::endl;
+void print_time(clock_t total)
+{
+    float time = (float) total / CLOCKS_PER_SEC;
+    float fps = (num_frames == 0) ? std::numeric_limits<float>::infinity() : num_frames / time;
+    std::cout << "total: " << time << " seconds, \tFPS: " << fps << " /s\n";
+}
+
+void print_benchmark_progress() {
+    std::cout << "Total time-- ";
+    print_time(total_time);
+    std::cout << "total_time_undistort-- ";
+    print_time(total_time_undistort);
+    std::cout << "total_time_warp-- ";
+    print_time(total_time_warp);
+    std::cout << "total_time_thresh-- ";
+    print_time(total_time_thresh);
+    std::cout << "total_time_convert_color-- ";
+    print_time(total_time_convert_color);
+    std::cout << "total_time_find_peaks-- ";
+    print_time(total_time_find_peaks);
+    std::cout << "total_time_window_search-- ";
+    print_time(total_time_window_search);
+    std::cout << "total_time_waypoints-- ";
+    print_time(total_time_waypoints);
+    std::cout << "total_time_distort_back-- ";
+    print_time(total_time_distort_back);
+    std::cout << "total_time_add_weighted-- ";
+    print_time(total_time_add_weighted);
+    std::cout << std::endl;
 }
 
 int main(int argc, char *argv[])
@@ -89,8 +127,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    clock_t total_time = 0;
-    unsigned int num_frames = 0;
+
 
     while (true) {
         Mat frame, way_point_img;
@@ -104,16 +141,32 @@ int main(int argc, char *argv[])
         num_frames += 1;
 
         // Processing the video frame starts here, this is where the benchmark will get start time
-        clock_t start = clock();
+        clock_t total_start = clock();
+        clock_t undistort_start = total_start;  // Same time
 
         cv::undistort(frame, undistorted, mtx, dist);
+        total_time_undistort += clock() - undistort_start;
+
+        clock_t warp_start = clock();
         cv::warpPerspective(undistorted, transformed, transform_matrix, Size(1280, 720));
+        total_time_warp += clock() - warp_start;
+
+        clock_t thresh_start = clock();
         apply_thresholds(transformed, thresholded, file_yellow, file_white);
+        total_time_thresh += clock() - thresh_start;
+
         //draw_lanes_waypoints(thresholded, way_point_img);
         cv::Mat histogram, output;
+        std::vector<int> peaks;
+
+        clock_t convert_color_start = clock();
       	cv::cvtColor(thresholded, output, cv::COLOR_GRAY2BGR);
-      	std::vector<int> peaks;
+        total_time_convert_color += clock() - convert_color_start;
+
+        clock_t find_peaks_start = clock();
       	peaks = findPeaks(thresholded, histogram);
+        total_time_find_peaks += clock() - find_peaks_start;
+
     	unique_ptr<LaneLine> line(new LaneLine());
       	std::vector<unique_ptr<LaneLine>> lane_lines;
       	lane_lines.push_back(std::move(line));
@@ -123,11 +176,22 @@ int main(int argc, char *argv[])
       	std::vector<std::pair<double, double>> waypoints_meters;
 
         try {
+            clock_t window_search_start = clock();
             window_search(thresholded, output, lane_lines, peaks,  9, 100, 75, fitx1, ploty1, fitx2, final_result_img);
-            waypoints_meters = generate_waypoints(final_result_img, fitx1, ploty1, fitx2);
+            total_time_window_search += clock() - window_search_start;
 
+            clock_t generate_waypoints_start = clock();
+            waypoints_meters = generate_waypoints(final_result_img, fitx1, ploty1, fitx2);
+            total_time_waypoints += clock() - generate_waypoints_start;
+
+            clock_t distort_back_start = clock();
             cv::warpPerspective(final_result_img, dst, reverse_matrix, final_result_img.size());
+            total_time_distort_back += clock() - distort_back_start;
+
+            clock_t add_weighted_start = clock();
             cv::addWeighted(undistorted, 1, dst, 4, 0, summed);
+            total_time_add_weighted += clock() - add_weighted_start;
+
             // cv::warpPerspective(way_point_img, dst, reverse_matrix, Size(1280, 720));
             //cv::Mat color;
             //cv::cvtColor(thresholded, color, cv::COLOR_GRAY2BGR);
@@ -142,9 +206,9 @@ int main(int argc, char *argv[])
         }
 
         // frame processes, end time for the benchmarks frame
-        total_time += clock() - start;
+        total_time += clock() - total_start;
         if (benchmark && !quiet)
-            print_benchmark_progress(total_time, num_frames);
+            print_benchmark_progress();
 
         // Display the resulting
         cv::imshow("Frame", summed);
@@ -162,7 +226,7 @@ int main(int argc, char *argv[])
 
     std::cout << "DONE WITH MAKING VIDEO" << std::endl;
     if (benchmark)
-        print_benchmark_progress(total_time, num_frames);
+        print_benchmark_progress();
 
     // When everything done, release the video capture object
     cap.release();
