@@ -38,10 +38,7 @@
 - FPS without threshold_time: 13.54277 /s
 
 ### Jetson Tx2
-<<<<<<< HEAD
 #### CPU: Arm64 Cortex-A9 1.2GHz (2 core)
-=======
-#### CPU: 
 * Total time-- total: 252.727 seconds, 	FPS: 2.48489 /s
 * total_time_undistort-- total: 69.1702 seconds, 	FPS: 9.07906 /s
 * total_time_warp-- total: 30.4818 seconds, 	FPS: 20.6025 /s
