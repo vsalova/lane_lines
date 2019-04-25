@@ -160,20 +160,20 @@ int main(int argc, char *argv[])
         std::vector<int> peaks;
 
         clock_t convert_color_start = clock();
-      	cv::cvtColor(thresholded, output, cv::COLOR_GRAY2BGR);
+        cv::cvtColor(thresholded, output, cv::COLOR_GRAY2BGR);
         total_time_convert_color += clock() - convert_color_start;
 
         clock_t find_peaks_start = clock();
-      	peaks = findPeaks(thresholded, histogram);
+        peaks = findPeaks(thresholded, histogram);
         total_time_find_peaks += clock() - find_peaks_start;
 
-    	unique_ptr<LaneLine> line(new LaneLine());
-      	std::vector<unique_ptr<LaneLine>> lane_lines;
-      	lane_lines.push_back(std::move(line));
+        unique_ptr<LaneLine> line(new LaneLine());
+        std::vector<unique_ptr<LaneLine>> lane_lines;
+        lane_lines.push_back(std::move(line));
 
-      	cv::Mat fitx1, ploty1, fitx2;
-      	cv::Mat final_result_img(720, 1280, CV_8UC3, Scalar(0,0,0));
-      	std::vector<std::pair<double, double>> waypoints_meters;
+        cv::Mat fitx1, ploty1, fitx2;
+        cv::Mat final_result_img(720, 1280, CV_8UC3, Scalar(0,0,0));
+        std::vector<std::pair<double, double>> waypoints_meters;
 
         try {
             clock_t window_search_start = clock();
