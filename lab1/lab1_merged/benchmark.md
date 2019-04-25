@@ -24,5 +24,14 @@
 
 ### Jetson Tx2
 #### CPU: 
-* 
-* 
+* Total time-- total: 252.727 seconds, 	FPS: 2.48489 /s
+* total_time_undistort-- total: 69.1702 seconds, 	FPS: 9.07906 /s
+* total_time_warp-- total: 30.4818 seconds, 	FPS: 20.6025 /s
+* total_time_thresh-- total: 106.363 seconds, 	FPS: 5.90432 /s
+* total_time_convert_color-- total: 0.532603 seconds, 	FPS: 1179.11 /s
+* total_time_find_peaks-- total: 1.96466 seconds, 	FPS: 319.648 /s
+* total_time_window_search-- total: 13.2352 seconds, 	FPS: 47.4493 /s
+* total_time_waypoints-- total: 0.050319 seconds, 	FPS: 12480.4 /s
+* total_time_distort_back-- total: 27.3426 seconds, 	FPS: 22.9678 /s
+* total_time_add_weighted-- total: 3.04364 seconds, 	FPS: 206.332 /s
+
