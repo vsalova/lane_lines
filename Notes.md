@@ -185,3 +185,7 @@ Optuna -- training hyper parameters
 
 
 * What about 2D grid search? Variable in the y dimension?
+
+## Calvin, Victoria Friday group meeting April 26th
+
+* Model to train with pytorch is better

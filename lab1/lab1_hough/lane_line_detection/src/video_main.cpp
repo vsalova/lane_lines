@@ -6,10 +6,10 @@
 #include <utility>
 #include "thresholds.hpp"
 #include "signal_proc.hpp"
-#include "window_search.hpp"
 #include "lane_line.hpp"
 #include "cv_helper.hpp"
 #include "overloader.hpp"
+#include "hough.hpp"
 
 unsigned int num_frames = 0;
 clock_t total_time = 0;
@@ -190,6 +190,7 @@ int main(int argc, char *argv[])
             cvtColor(output, output, COLOR_BGR2GRAY);
 
             // Hough transform VIA OpenCV
+            /*
             vector<Vec2f> lines;
             cv::HoughLines(output, lines, 1, CV_PI/180, 150, 0, 0 );
 
@@ -206,6 +207,12 @@ int main(int argc, char *argv[])
                 pt2.y = cvRound(y0 - 1000 * (a));
                 cv::line(final_result_img, pt1, pt2, Scalar(0,0,255), 3, LINE_AA);
             }
+            */
+
+            // Vector field to Hough like space
+            std::vector<tuple<double, double, double>> vector_field;
+            mat_to_vector_field(output, vector_field, 8, 1);
+
             // Clustering
 
             //clock_t generate_waypoints_start = clock();

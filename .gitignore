@@ -47,6 +47,10 @@ lab1/lab1_merged/camera_calibration/build
 lab1/lab1_merged/lane_line_detection/build
 lab1/lab1_merged/lane_line_detection/.vs
 
+lab1/lab1_hough/sandbox/build
+lab1/lab1_hough/camera_calibration/build
+lab1/lab1_hough/lane_line_detection/build
+lab1/lab1_hough/lane_line_detection/.vs
 
 # Mac ds store
 .DS_Store

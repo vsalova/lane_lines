@@ -34,7 +34,7 @@ void window_search(cv::Mat& binary_warped, cv::Mat& window_img,
             cv::rectangle(window_img, cv::Point(win_left, win_bottom),
             cv::Point(win_right, win_top), cv::Scalar(0,255,0), 2);
 
-            // Rind the average of the lane line points
+            // Find the average of the lane line points
             cv::Mat cropped = binary_warped(cv::Range(win_top, win_bottom), cv::Range(win_left, win_right));
 
             cv::Mat averaged, averaged_x, x_total, y_total;
