@@ -20,7 +20,7 @@ void subplot(std::string title, std::vector<cv::Mat> &v, unsigned int w, unsigne
 
 class HSVmanager
 {
-  public:
+ public:
     cv::Scalar hsv_min;
     cv::Scalar hsv_max;
     cv::Mat hsvImage;
@@ -39,14 +39,15 @@ template <typename T>
 
 class ValueTracker
 {
-  public:
+ public:
     class V
     {
-      public:
+     public:
         int slider;
         T *value;
         T max_value;
     };
+
     cv::FileStorage file;
     std::string filename;
     std::map<std::string, V> values;
@@ -86,12 +87,14 @@ class ValueTracker
         }
         file.release();
     };
+
     static void onTrackbar(int, void *object)
     {
         using namespace std;
         V *val = (V *)object;
         *val->value = (T)val->slider;
     };
+
     void trackbar(std::string windowName)
     {
         using namespace cv;
