@@ -33,3 +33,35 @@ If you run `docker images` you should see an image with the tag `lane_lines`. Co
 
 All different ways to run stuff
 
+
+
+# Orginal Lane Line Detection Instructions
+
+The original lane line lab from January 2019 is located in `lab1\lab1_merged`
+
+## Installation Requirement
+
+* cmake [download page](https://cmake.org/download/)
+
+
+## Build
+
+Run the `lab1\lab1_merged\build.sh` script by typing:  
+`./build.sh`
+
+## Run
+
+TODO get input files syntax for each executable
+
+Run any of the executables
+
+* `camera_calibration/build/calibrate_camera INPUTS HERE`
+* `camera_calibration/build/intrinsics_tester INPUTS HERE`
+
+* `lane_line_detection/build/images_main INPUTS HERE`
+* `lane_line_detection/build/perspective_transform_tester INPUTS HERE`
+* `lane_line_detection/build/thresholds_tester INPUTS HERE`
+* `lane_line_detection/build/video_main INPUTS HERE`
+* `lane_line_detection/build/window_search_tester INPUTS HERE`
+
+You can run the program after building by executing `./make_video.sh` 

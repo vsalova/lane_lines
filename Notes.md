@@ -169,6 +169,9 @@ Get segmentation from deep learning model
 Optuna -- training hyper parameters
 
 * OpenCV gpu implementation -- research how much speed up
+	* (Intrudction)[http://developer.download.nvidia.com/GTC/PDF/1085_Fung.pdf]
+	* GpuMat
+	* cv::cuda replaces cv::
 
 * openmp -- speed up code with for loops
 
@@ -179,3 +182,6 @@ Optuna -- training hyper parameters
 #### To have a real time updates on the model being trained
 
 `watch -n1 nvidia-smi`
+
+
+* What about 2D grid search? Variable in the y dimension?
