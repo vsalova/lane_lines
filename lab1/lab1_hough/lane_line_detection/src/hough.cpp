@@ -1,6 +1,7 @@
 #include <ctime>
 #include <opencv2/opencv.hpp>
 #include <iostream>
+#include <math.h>
 #include <string>
 #include <utility>
 #include "thresholds.hpp"
@@ -29,9 +30,11 @@ void mat_to_vector_field(cv::Mat& source, std::vector<std::tuple<double, double,
         throw std::runtime_error("num_rows_to_find_angle must be >= window_size\n");
     }
     else if (source.rows % window_size != 0 || source.cols % window_size != 0) {
-        throw std::runtime_error("window_size doesn't divice the source width or height");
+        throw std::runtime_error("window_size doesn't divice the source width or height\n");
     }
-    //TODO else if number of channels is not equal to 1 throw error
+    else if (source.channels() != 1) {
+        throw std::runtime_error("source image should does not have exactly one channel\n");
+    }
 
     int num_windows_x = source.cols / window_size;
     int num_windows_y = source.rows / window_size;
@@ -42,23 +45,60 @@ void mat_to_vector_field(cv::Mat& source, std::vector<std::tuple<double, double,
         int src_bottom_y = src_top_y + window_size - 1;     // Bottom is inside the window
         int src_left_x = window_num_x * window_size;
         int src_right_x = src_left_x + window_size;
-        //int src_middle_x = src_left_x + (window_size / 2);
+        int src_middle_x = src_left_x + (window_size / 2);
+        //int src_middle_y = src_top_y + (window_size / 2);
         // Find all non-zero points in the top rectangle
-        cv::Mat window = source(cv::Range(src_top_y, src_bottom_y), cv::Range(src_left_x, src_right_x));
-        cv::Mat non_zero;
+        cv::Mat window = source(cv::Range(src_top_y, src_top_y + num_rows_to_find_angle), cv::Range(src_left_x, src_right_x));
+        std::vector<Point> non_zero;
         cv::findNonZero(window, non_zero);
-        if (non_zero.rows == 0 || non_zero.cols == 0)     // Non zero pixels not found
+        if (non_zero.size() == 0)     // Non zero pixels not found
             continue;
 
-        std::cout << "Non zero dimensions: " << non_zero.size() << "\t" << "channels: " << non_zero.channels() << std::endl;
         // Get average point of non zero pixels
         double total_y = 0;
         double total_x = 0;
-        // for all point, add up in non_zero channels 0 and 1
-        double avg_y = total_y / non_zero.rows;
-        double avg_x = total_x / non_zero.rows;
-        // Calculate angle
+        for (unsigned int i = 0; i < non_zero.size(); i++) {
+            Point p = non_zero[i];
+            total_y += p.y;
+            total_x += p.x;
+        }
+        double avg_y = total_y / non_zero.size();
+        double avg_x = total_x / non_zero.size();
 
-        // result.push_back(...)
+        // Calculate angle
+        double delta_y = window_size - avg_y;   // Referrence is the bottom of the window
+        double delta_x = avg_x - (window_size / 2); // Referrence is the middle x of the window
+        double theta = atan2(delta_y, delta_x);
+
+        result.push_back(std::make_tuple(src_middle_x, src_bottom_y, theta));
     }}
+}
+
+
+void draw_vector_field(cv::Mat& dest, std::vector<std::tuple<double, double, double>>& vectors, double line_length)
+{
+    cv::RNG rng(12345);
+    for (auto v : vectors) {
+        double x1 = std::get<0>(v);
+        double y1 = std::get<1>(v);
+        double theta = std::get<2>(v);
+        double x2 = x1 + cos(theta) * line_length;
+        double y2 = y1 - sin(theta) * line_length;
+
+        cv::circle(dest, Point(x1, y1), 2, Scalar(rng.uniform(0,255), rng.uniform(0, 255), rng.uniform(0, 255)), CV_FILLED);
+        cv::arrowedLine(dest, Point(x1, y1), Point(x2, y2), Scalar(rng.uniform(0,255), rng.uniform(0, 255), rng.uniform(0, 255)), 2, 8, 0, 0.3);
+    }
+}
+
+void draw_grid(cv::Mat& dest, int width)
+{
+    cv::Scalar color (100,100,100); //BGR color
+    for (int y = 0; y < dest.rows; y += width) {
+        // Draw horizontal line
+        cv::line(dest, Point(0, y), Point(dest.cols, y), color);
+    }
+    for (int x = 0; x < dest.cols; x += width) {
+        // Draw verticle line
+        cv::line(dest, Point(x, 0), Point(x, dest.rows), color);
+    }
 }

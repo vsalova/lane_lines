@@ -17,9 +17,7 @@ clock_t total_time_undistort = 0;
 clock_t total_time_warp = 0;
 clock_t total_time_thresh = 0;
 clock_t total_time_convert_color = 0;
-clock_t total_time_find_peaks = 0;
-clock_t total_time_window_search = 0;
-clock_t total_time_waypoints = 0;
+clock_t total_time_hough = 0;
 clock_t total_time_distort_back = 0;
 clock_t total_time_add_weighted = 0;
 
@@ -52,12 +50,8 @@ void print_benchmark_progress() {
     print_time(total_time_thresh);
     std::cout << "total_time_convert_color-- ";
     print_time(total_time_convert_color);
-    std::cout << "total_time_find_peaks-- ";
-    print_time(total_time_find_peaks);
-    std::cout << "total_time_window_search-- ";
-    print_time(total_time_window_search);
-    std::cout << "total_time_waypoints-- ";
-    print_time(total_time_waypoints);
+    std::cout << "total_time_hough-- ";
+    print_time(total_time_hough);
     std::cout << "total_time_distort_back-- ";
     print_time(total_time_distort_back);
     std::cout << "total_time_add_weighted-- ";
@@ -175,12 +169,9 @@ int main(int argc, char *argv[])
         cv::Mat fitx1, ploty1, fitx2;
         cv::Mat final_result_img(720, 1280, CV_8UC3, Scalar(0,0,0));
         std::vector<std::pair<double, double>> waypoints_meters;
+        cv::Mat vector_field_thresh;
 
         try {
-            //clock_t window_search_start = clock();
-            //window_search(thresholded, output, lane_lines, peaks,  9, 100, 75, fitx1, ploty1, fitx2, final_result_img);
-            //total_time_window_search += clock() - window_search_start;
-
             //cv::imshow("INPUT INTO HOUGH TRANS", output);
             //char b = (char) waitKey(3000);
             //if (b == ESC_ASCII)
@@ -210,14 +201,23 @@ int main(int argc, char *argv[])
             */
 
             // Vector field to Hough like space
+            const int grid_size = 16;
             std::vector<tuple<double, double, double>> vector_field;
-            mat_to_vector_field(output, vector_field, 8, 1);
+            clock_t hough_start = clock();
+            mat_to_vector_field(output, vector_field, grid_size, 2);
+            total_time_hough += clock() - hough_start;
+
+            cv::cvtColor(output, vector_field_thresh, cv::COLOR_GRAY2BGR);
+            draw_vector_field(vector_field_thresh, vector_field, (int) (grid_size * 0.8));
+            draw_grid(vector_field_thresh, grid_size);
+            //cv::imshow("vector field", vector_field_thresh);
+            //waitKey(10000000);
 
             // Clustering
+            // @Daniel, you're information is in vector_field
 
-            //clock_t generate_waypoints_start = clock();
-            //waypoints_meters = generate_waypoints(final_result_img, fitx1, ploty1, fitx2);
-            //total_time_waypoints += clock() - generate_waypoints_start;
+
+
 
             clock_t distort_back_start = clock();
             cv::warpPerspective(final_result_img, dst, reverse_matrix, final_result_img.size());
@@ -227,38 +227,51 @@ int main(int argc, char *argv[])
             cv::addWeighted(undistorted, 1, dst, 4, 0, summed);
             total_time_add_weighted += clock() - add_weighted_start;
 
-            // cv::warpPerspective(way_point_img, dst, reverse_matrix, Size(1280, 720));
-            //cv::Mat color;
-            //cv::cvtColor(thresholded, color, cv::COLOR_GRAY2BGR);
-            //cv::warpPerspective(color, dst, reverse_matrix, Size(1280, 720));
-            // cv::addWeighted(undistorted, 01., dst, 1.0, 0, summed);
+            ////////////////////////////////////////////////////
+            // Frame is now processesed, end time for the benchmarks frame
+            total_time += clock() - total_start;
+            if (benchmark && !quiet)
+                print_benchmark_progress();
+
+            // Display the results
+            cv::Mat window_mat(cv::Size(1800,900), CV_8UC3);
+            //std::cout << "Type of summed, thresholded, transformed, vector_field_thresh: " << summed.type() << " " << thresholded.type() << " " << transformed.type() << " " << vector_field_thresh.type() << std::endl;
+
+            cv::Mat summed_small, thresholded_small, transformed_small, vector_field_thresh_small;
+            cv::resize(summed, summed_small, cv::Size(900,450));
+            cv::resize(thresholded, thresholded_small, cv::Size(900,450));
+            cv::resize(transformed, transformed_small, cv::Size(900,450));
+            cv::resize(vector_field_thresh, vector_field_thresh_small, cv::Size(900,450));
+            //cv::cvtColor(summed_small, summed_small, CV_GRAY2RGB);
+            cv::cvtColor(thresholded_small, thresholded_small, CV_GRAY2RGB);
+            //cv::cvtColor(transformed_small, transformed_small, CV_GRAY2RGB);
+            //cv::cvtColor(vector_field_thresh_small, vector_field_thresh_small, CV_GRAY2RGB);
+            summed_small.             copyTo(window_mat(cv::Rect(   0,   0, 900, 450)));
+            thresholded_small.        copyTo(window_mat(cv::Rect( 900,   0, 900, 450)));
+            transformed_small.        copyTo(window_mat(cv::Rect(   0, 450, 900, 450)));
+            vector_field_thresh_small.copyTo(window_mat(cv::Rect( 900, 450, 900, 450)));
+            cv::imshow("Outputs", window_mat);
+
+            //cv::imshow("thresholded testing", thresholded);
+            //cv::imshow("waypoint image testing", way_point_img);
+            //cv::imshow("warped perspective", transformed);
+            //cv::waitKey();    // Pause at every frame
+            video.write(summed);
+
+            // Press  ESC on keyboard to exit
+            char c = (char) waitKey(5);
+            if (c == ESC_ASCII)
+                break;
+
         } catch(Exception e){
-            imshow("Frame", thresholded);
-            cv::waitKey(0);
+            std::cerr << "Exception occurred:" << std::endl;
+            std::cerr << e.what() << std::endl;
+            imshow("Exception occurred, last good frame:", thresholded);
             video.write(summed);
             cap.release();
             video.release();
-            std::cerr << "Exception occurred:" << std::endl;
-            std::cerr << e.what() << std::endl;
+            cv::waitKey(0);
         }
-
-        // frame processes, end time for the benchmarks frame
-        total_time += clock() - total_start;
-        if (benchmark && !quiet)
-            print_benchmark_progress();
-
-        // Display the resulting
-        cv::imshow("Frame", summed);
-        //cv::imshow("thresholded testing", thresholded);
-        //cv::imshow("waypoint image testing", way_point_img);
-        //cv::imshow("warped perspective", transformed);
-        //cv::waitKey();    // Pause at every frame
-        video.write(summed);
-
-        // Press  ESC on keyboard to exit
-        char c = (char) waitKey(25);
-        if (c == ESC_ASCII)
-            break;
     }
 
     std::cout << "DONE WITH MAKING VIDEO" << std::endl;
