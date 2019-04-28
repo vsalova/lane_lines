@@ -292,8 +292,8 @@ class VGG16Encoder(cnn_basenet.CNNBaseModel):
             conv_output = self.conv2d(inputdata=dropout_output, out_channel=5,
                                       kernel_size=1, use_bias=True, name='conv_6')
 
-            #ret['prob_output'] = tf.image.resize_images(conv_output, [CFG.TRAIN.IMG_HEIGHT, CFG.TRAIN.IMG_WIDTH])
-            ret['prob_output'] = tf.image.resize_images(conv_output, [288, 800])
+            ret['prob_output'] = tf.image.resize_images(conv_output, [CFG.TRAIN.IMG_HEIGHT, CFG.TRAIN.IMG_WIDTH])
+            #ret['prob_output'] = tf.image.resize_images(conv_output, [288, 800])
 
             ### add lane existence prediction branch ###
 
