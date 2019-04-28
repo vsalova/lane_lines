@@ -18,8 +18,7 @@ import numpy as np
 import tensorflow as tf
 
 import sys
-
-from config import global_config
+import config.global_config
 from lanenet_model import lanenet_merge_model
 from data_provider import lanenet_data_processor
 
@@ -159,9 +158,9 @@ def forward(batch_queue, net, phase, scope, optimizer=None):
 def train_net(dataset_dir, weights_path=None, net_flag='vgg'):
     # train_dataset_file = ops.join(dataset_dir, 'list_train.txt')
     # val_dataset_file = ops.join(dataset_dir, 'list_val.txt')
-    train_dataset_file = ops.join(dataset_dir, '/train_gt.txt')
-    val_dataset_file = ops.join(dataset_dir, '/val_gt.txt')
-
+    train_dataset_file = ops.join(dataset_dir, 'train_gt.txt')
+    val_dataset_file = ops.join(dataset_dir, 'val_gt.txt')
+    print(val_dataset_file)
     assert ops.exists(train_dataset_file)
 
     phase = tf.placeholder(dtype=tf.string, shape=None, name='net_phase')
