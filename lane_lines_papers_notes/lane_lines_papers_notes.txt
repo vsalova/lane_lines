@@ -1,0 +1,112 @@
+** good picture = **
+
+SCNN -- https://arxiv.org/pdf/1712.06080.pdf
+
+CNN methods solving lane line detection have hard time detecting occluded parts,
+ or objects that are long and continuous
+
+SCNN does better than CNN methods because of "information passing" between neurons
+ "To address this issue, we propose Spatial CNN (SCNN), a generalization of deep convolutional neural networks to a rich spatial level. In a layer-by-layer CNN, a convolution layer receives input from the former layer, applies convolution operation and nonlinear activation, and sends result to the next layer. This process is done sequentially. Similarly, SCNN views rows or columns of feature maps as layers and applies convolution, nonlinear activation, and sum operations sequentially, which forms a deep neural network. In this way information could be propagated between neurons in the same layer."
+
+"Traditional methods to model spatial relationship are based on Markov Random Fields (MRF) or Conditional Random   Fields (CRF) (Krahenbuhl and Koltun 2011)."
+
+SCNN better than MRF and CRF because:
+1) MRF has dense message passing, while SCNN removes redundant message passing, but still achieves the goal the all  pixels receive messages from all of the other pixels. This makes SCNN run faster (4.18x faster than CRF and also faster than LSTM 2.74x faster with same input dimension between CRF-SCNN(fair-comparison) and LSTM-SCNN).
+ 	SCNN achieves this by doing convolutions in multiple dimensions, and sharing the weights across the 4 different directions (up, down, left, right)
+
+2) Message as residual???
+
+3) Since it's computationally inexpensive, it can be applied at the start of CNN's to add better spatial understanding
+
+See evaluation as a way to numerically compare results (page 5)
+
+Ablation experiments showed that applying SCNN as the top layer in a CNN gives better results than applying it at the  end of the model, since earlier in the model there is "richer information)"
+
+Showed that sequential message passing is better than parallel message passing (page 5) WHY?
+
+SCNN is merely a layer, so it can be applied multiple times
+
+SCNN provides a necessary spatial information segment to lane line detection models
+
+Other papers referenced:
+	* Krizhevsky, A.; Sutskever, I.; and Hinton, G. E. 2012. Imagenet classification with deep convolutional neural networks. In NIPS
+		-- http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf
+		Image classification, large, deep CNN, but lack ability to detect long continuous objects.
+
+	* Long, J.; Shelhamer, E.; and Darrell, T. 2015. Fully convolutional networks for semantic segmentation. In CVPR.
+		-- https://people.eecs.berkeley.edu/~jonlong/long_shelhamer_fcn.pdf
+		Applies FCNs to semantic segmentation, but still fails to do well with long continuous objects
+
+	* Aly, M. 2008. Real time detection of lane markers in urban streets. In Intelligent Vehicles Symposium, 2008 IEEE, 7–12. IEEE
+		-- https://arxiv.org/pdf/1411.7113.pdf
+		** Good pictures for undistorting image
+		Thresholding by finding vertical lines (Fig 4)
+		Traditional CV using Hough, 2D gaussian filter to detect vertical lines
+
+	* Son, J.; Yoo, H.; Kim, S.; and Sohn, K. 2015. Real-time illumination invariant lane detection for lane departure warning system. Expert Systems with Applications 42(4):1816–1824
+		-- http://diml.yonsei.ac.kr/papers/Real-time%20Illumination%20Invariant%20Lane%20Detection%20%20for%20Lane%20Departure%20Warning%20System.pdf
+		Vanishing point detection, adaptive RIO
+		** good hough transformation pictures **
+		** good vanishing point images **
+		"Near Infrared (NIR) image can help solving the saturation problem of vision sensor caused by strong reflections [glare]"
+
+	* Jung, S.; Youn, J.; and Sull, S. 2016. Efficient lane detection based on spatiotemporal images. IEEE Transactions on Intelligent Transportation Systems 17(1):289–295
+		-- https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=7217838
+		Generate spatiotemporal images via scan-lines, then align them with a horizontal displacement for each scan-line so that the lane lines are straight and "undistorted", Hough transform
+		Temporal nature makes it good with missing parts of lanes
+		** Good pictures of spatiotemporal images **
+		Doesn't seem real-time, but based on a whole video(?)
+
+	* Huval, B.; Wang, T.; Tandon, S.; Kiske, J.; Song, W.; Pazhayampallil, J.; Andriluka, M.; Rajpurkar, P.; Migimatsu, T.; Cheng-Yue, R.; et al. 2015. An empirical evaluation of deep learning on highway driving. arXiv preprint arXiv:1504.01716
+		-- https://arxiv.org/pdf/1504.01716.pdf
+		Deep learning lane-line detection, gives a dataset of highway driving
+		" Due to our data collection methods for lane labels, we are able to obtain ground truth in spite of objects that occlude them. This forces the neural network to learn more than a simple paint detector, and must use context to predict lanes where there are occlusions"
+		NEED TO KNOW THE PROCESS OF THIS ONE BETTER
+
+	* Visin, F.; Kastner, K.; Cho, K.; Matteucci, M.; Courville, A.; and Bengio, Y. 2015. Renet: A recurrent neural network based alternative to convolutional networks. arXiv preprint arXiv:1505.00393
+
+
+	* Bell, S.; Lawrence Zitnick, C.; Bala, K.; and Girshick, R. 2016. Inside-outside net: Detecting objects in context with skip pooling and recurrent neural networks. In CVPR
+
+
+	* Liang, X.; Shen, X.; Feng, J.; Lin, L.; and Yan, S. 2016a. Semantic object parsing with graph lstm. In ECCV
+
+
+	* Liang, X.; Shen, X.; Xiang, D.; Feng, J.; Lin, L.; and Yan, S. 2016b. Semantic object parsing with local-global long short-term memory. In CVPR.
+
+
+	* Liu, Z.; Li, X.; Luo, P.; Loy, C.-C.; and Tang, X. 2015. Semantic image segmentation via deep parsing network. In ICCV.
+
+
+	* Tompson, J. J.; Jain, A.; LeCun, Y.; and Bregler, C. 2014. Joint training of a convolutional network and a graphical model for human pose estimation. In NIPS
+
+
+	* Chu, X.; Ouyang, W.; Wang, X.; et al. 2016. Crf-cnn: Modeling structured information in human pose estimation. In NIPS.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ ICNet -- https://arxiv.org/pdf/1704.08545.pdf
+ LaneNet -- https://arxiv.org/pdf/1807.01726.pdf
+ DeepLabV1 -- https://arxiv.org/pdf/1412.7062.pdf   or   https://arxiv.org/pdf/1606.00915.pdf
+ DeepLabV2 -- ?
+ DeepLabV3 -- https://arxiv.org/pdf/1706.05587.pdf
+ DeepLabV3+ -- https://arxiv.org/abs/1802.02611
