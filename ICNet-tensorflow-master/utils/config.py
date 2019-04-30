@@ -81,8 +81,8 @@ class Config(object):
             self.param = self.ADE20k_param
         elif dataset == 'cityscapes':
             self.param = self.cityscapes_param
-        elif dataset == 'others':
-            self.param = self.others_param
+        elif dataset == 'culane':
+            self.param = self.CULane_param
 
         self.dataset = dataset
         self.random_scale = random_scale
