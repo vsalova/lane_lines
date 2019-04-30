@@ -18,7 +18,7 @@ import numpy as np
 import tensorflow as tf
 
 import sys
-import config.global_config
+from  config import global_config
 from lanenet_model import lanenet_merge_model
 from data_provider import lanenet_data_processor
 
@@ -160,6 +160,7 @@ def train_net(dataset_dir, weights_path=None, net_flag='vgg'):
     # val_dataset_file = ops.join(dataset_dir, 'list_val.txt')
     train_dataset_file = ops.join(dataset_dir, 'train_gt.txt')
     val_dataset_file = ops.join(dataset_dir, 'val_gt.txt')
+    print(train_dataset_file)
     print(val_dataset_file)
     assert ops.exists(train_dataset_file)
 
@@ -331,6 +332,7 @@ def train_net(dataset_dir, weights_path=None, net_flag='vgg'):
 if __name__ == '__main__':
     # init args
     args = init_args()
-
+    print("PATH")
+    print(args.dataset_dir)
     # train lanenet
     train_net(args.dataset_dir, args.weights_path, net_flag=args.net)
