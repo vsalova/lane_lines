@@ -8,10 +8,10 @@ CNN methods solving lane line detection have hard time detecting occluded parts,
 SCNN does better than CNN methods because of "information passing" between neurons
  "To address this issue, we propose Spatial CNN (SCNN), a generalization of deep convolutional neural networks to a rich spatial level. In a layer-by-layer CNN, a convolution layer receives input from the former layer, applies convolution operation and nonlinear activation, and sends result to the next layer. This process is done sequentially. Similarly, SCNN views rows or columns of feature maps as layers and applies convolution, nonlinear activation, and sum operations sequentially, which forms a deep neural network. In this way information could be propagated between neurons in the same layer."
 
-"Traditional methods to model spatial relationship are based on Markov Random Fields (MRF) or Conditional Random   Fields (CRF) (Krahenbuhl and Koltun 2011)."
+"Traditional methods to model spatial relationship are based on Markov Random Fields (MRF) or Conditional Random Fields (CRF) (Krahenbuhl and Koltun 2011)."
 
 SCNN better than MRF and CRF because:
-1) MRF has dense message passing, while SCNN removes redundant message passing, but still achieves the goal the all  pixels receive messages from all of the other pixels. This makes SCNN run faster (4.18x faster than CRF and also faster than LSTM 2.74x faster with same input dimension between CRF-SCNN(fair-comparison) and LSTM-SCNN).
+1) MRF has dense message passing, while SCNN removes redundant message passing, but still achieves the goal the all pixels receive messages from all of the other pixels. This makes SCNN run faster (4.18x faster than CRF and also faster than LSTM 2.74x faster with same input dimension between CRF-SCNN(fair-comparison) and LSTM-SCNN).
  	SCNN achieves this by doing convolutions in multiple dimensions, and sharing the weights across the 4 different directions (up, down, left, right)
 
 2) Message as residual???
@@ -20,7 +20,7 @@ SCNN better than MRF and CRF because:
 
 See evaluation as a way to numerically compare results (page 5)
 
-Ablation experiments showed that applying SCNN as the top layer in a CNN gives better results than applying it at the  end of the model, since earlier in the model there is "richer information)"
+Ablation experiments showed that applying SCNN as the top layer in a CNN gives better results than applying it at the end of the model, since earlier in the model there is "richer information)"
 
 Showed that sequential message passing is better than parallel message passing (page 5) WHY?
 
@@ -64,49 +64,85 @@ Other papers referenced:
 		NEED TO KNOW THE PROCESS OF THIS ONE BETTER
 
 	* Visin, F.; Kastner, K.; Cho, K.; Matteucci, M.; Courville, A.; and Bengio, Y. 2015. Renet: A recurrent neural network based alternative to convolutional networks. arXiv preprint arXiv:1505.00393
-
+		-- https://arxiv.org/pdf/1505.00393.pdf
+		Recurrent Neural Network used versus normal CNNs
+		Usually RNNs are used in sequential data, like text and sound
+		Quote that looks a lot like the model in SCNN:
+		"The basic idea behind the proposed ReNet architecture is to replace each convolutional layer (with convolution+pooling making up a layer) in the CNN with four RNNs that sweep over lower-layer features in different directions: (1) bottom to top, (2) top to bottom, (3) left to right and (4) right to left. The recurrent layer ensures that each feature activation in its output is an activation at the specific location with respect to the whole image, in contrast to the usual convolution+pooling layer which only has a local context window. The lowest layer of the model sweeps over the input image, with subsequent layers operating on extracted representations from the layer below, forming a hierarchical representation of the input"
+		** Good picture on page 2 **
+		Differences between ReNet and LeNet (LeNet = normal CNNs -- LeCun et al. [1989])
+			* "At each layer, both networks apply the same set of filters to patches of the input image or of the
+feature map from the layer below. ReNet, however, propagates information through lateral connections that span across the whole image, while LeNet exploits local information only"
+			* LeNet uses max pooling to achieve local translation invariance, while ReNet doesn't use any max pooling (although you can to make it faster) because "The lateral connection in ReNet can emulate the local competition among features induced by the max-pooling in LeNet"
+			* "In some sense, each layer of the ReNet can be considered as a variant of a usual convolution+pooling
+layer, where pooling is replaced with lateral connections, and convolution is done without any overlap."
+		CIFAR-10, CIFAR-100, MNIST, The Street View House Numbers (SVHN) dataset
+		Performs the same as Deep CNNs, but a little worse than CNNs (Results and Analysis section)
+		Not easily parallelizable, due to sequential nature of RNNs (main disadvantage) 
 
 	* Bell, S.; Lawrence Zitnick, C.; Bala, K.; and Girshick, R. 2016. Inside-outside net: Detecting objects in context with skip pooling and recurrent neural networks. In CVPR
-
+		-- https://arxiv.org/pdf/1512.04143.pdf
+		Attempt to recognize objects spatially
+		ION -- Inside outside net
+		Information outside RIO uses Spatial Recurrent Neural Networks
+		Inside RIO uses skip pooling
+		Utilizes skip layer connections -- connections skipping over layers (essential to L2 normalize the activations)
+		Does well with small objects, and occluded objects
+		Used for object detection, but semantic segmentation is easily added on
 
 	* Liang, X.; Shen, X.; Feng, J.; Lin, L.; and Yan, S. 2016a. Semantic object parsing with graph lstm. In ECCV
-
+		-- https://arxiv.org/pdf/1603.07063.pdf
+		Graph LSTM
+		Parsing objects into various parts
 
 	* Liang, X.; Shen, X.; Xiang, D.; Feng, J.; Lin, L.; and Yan, S. 2016b. Semantic object parsing with local-global long short-term memory. In CVPR.
-
+		-- https://arxiv.org/pdf/1511.04510.pdf
+		"p Local-Global Long Short-Term Memory (LG-LSTM) architecture to seamlessly incorporate short-distance and long-distance spatial dependencies into the feature learning over all pixel positions"
 
 	* Liu, Z.; Li, X.; Luo, P.; Loy, C.-C.; and Tang, X. 2015. Semantic image segmentation via deep parsing network. In ICCV.
-
+		-- https://www.cv-foundation.org/openaccess/content_iccv_2015/papers/Liu_Semantic_Image_Segmentation_ICCV_2015_paper.pdf
+		Proposes Deep Parsing Network
+		Combines CNNs with Markov Random Fields or Conditional Random Fields
+		Parallelizable from its CNN nature
 
 	* Tompson, J. J.; Jain, A.; LeCun, Y.; and Bregler, C. 2014. Joint training of a convolutional network and a graphical model for human pose estimation. In NIPS
+		-- https://www.robots.ox.ac.uk/~vgg/rg/papers/tompson2014.pdf
+		Applies MRF to human pose estimation
+		Uses Deep CNN to get heat map of body part localizations ** Good images page 5,8 ** 
+		Use a spatial model to remove false positives that are anatomically impossible - "We use a higher-level Spatial-Model to constrain joint inter-connectivity and enforce global pose consistency. The expectation of this stage is to not increase the performance of detections that are already close to the ground-truth pose, but to remove false positive outliers that are anatomically incorrect"
 
 
 	* Chu, X.; Ouyang, W.; Wang, X.; et al. 2016. Crf-cnn: Modeling structured information in human pose estimation. In NIPS.
+		-- https://arxiv.org/pdf/1611.00468.pdf
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+CRF -- conditional random field
+	- Like Hidden Markov Model but more powerful (can transform and HMM into a CRF via a transformation of the HMM)
+	- multinomial logistic regression model can be seen as the simplest kind of CRF (since one output variable)
+	- Have a bunch of input variables x and output variables y
+	- Takes in neighboring labels, not just single input single label output
+MRF -- Markov random field -- Example of Undirected graphical model
+	- set of random variables (usually indexed by spatial position)
+Bayesian Network
+	- need to be acyclic, directed
 
 
 
 
  ICNet -- https://arxiv.org/pdf/1704.08545.pdf
+
+
+
  LaneNet -- https://arxiv.org/pdf/1807.01726.pdf
- DeepLabV1 -- https://arxiv.org/pdf/1412.7062.pdf   or   https://arxiv.org/pdf/1606.00915.pdf
+
+
+
+
+ 
+ DeepLabV1 -- https://arxiv.org/pdf/1412.7062.pdf  or  https://arxiv.org/pdf/1606.00915.pdf
  DeepLabV2 -- ?
  DeepLabV3 -- https://arxiv.org/pdf/1706.05587.pdf
  DeepLabV3+ -- https://arxiv.org/abs/1802.02611
