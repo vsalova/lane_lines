@@ -5,7 +5,7 @@ class Config(object):
     # Setting dataset directory
     CITYSCAPES_DATA_DIR = './data/cityscapes_dataset/cityscape/'
     ADE20K_DATA_DIR = './data/ADEChallengeData2016/'
-    CULANE_DATA_DIR = '.../../../../teams/team-1/Datasets/CULane_Dataset/'
+    CULANE_DATA_DIR = './../../../../teams/team-1/Datasets/CULane_Dataset/'
 
     ADE20K_eval_list = os.path.join('./data/list/ade20k_val_list.txt')
     CITYSCAPES_eval_list = os.path.join('./data/list/cityscapes_val_list.txt')
