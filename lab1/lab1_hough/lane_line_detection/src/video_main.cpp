@@ -216,12 +216,12 @@ int main(int argc, char *argv[])
             // Clustering
             // @Daniel, you're information is in vector_field
 
-            // Temporarily save to file
-            //std::ofstream outFile("hough_example_output.txt");
-            //for (tuple<double, double, double> vec : vector_field) {
-            //    outFile << get<0>(vec) << "," << get<1>(vec) << "," << get<2>(vec) << "\n";
-            //}
-            //outFile.close();
+            //Temporarily save to file
+            std::ofstream outFile("hough_example_output.txt");
+            for (tuple<double, double, double> vec : vector_field) {
+                outFile << get<0>(vec) << "," << get<1>(vec) << "," << get<2>(vec) << "\n";
+            }
+            outFile.close();
             //exit(-1);
 
 
@@ -265,7 +265,7 @@ int main(int argc, char *argv[])
             video.write(summed);
 
             // Press  ESC on keyboard to exit
-            char c = (char) waitKey(5);
+            char c = (char) waitKey(0);
             if (c == ESC_ASCII)
                 break;
 
