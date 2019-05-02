@@ -9,6 +9,7 @@ import pandas as pd
 import time
 import matplotlib.pyplot as plt
 import seaborn as sns
+
 #%matplotlib inline
 sns.set_context('poster')
 sns.set_palette('Paired', 10)
@@ -50,31 +51,58 @@ def benchmark_algorithm(dataset_sizes, cluster_function, function_args, function
 
 
 dataset_sizes = np.hstack([np.arange(1, 6) * 500, np.arange(3,7) * 1000, np.arange(4,17) * 2000])
+plt.figure(figsize=(12,12))
+
+filepath = "hough_example_output_noisy.txt"
+
+f = open(filepath)
+dataset = np.loadtxt(f, delimiter=',', usecols=(0,1), unpack=False)
+
+f = open(filepath)
+datasetNoY = np.loadtxt(f, delimiter=',', usecols=(0,2), unpack=False)
+
+f = open(filepath)
+dataset3d = np.loadtxt(f, delimiter=',', usecols=(0,1,2), unpack=False)
+plt.subplot(221)
+#import pdb; pdb.set_trace()
+
+plt.scatter(dataset[:,0], dataset[:,1])
+plt.savefig('dataset.png')
 
 
 
-k_means = sklearn.cluster.KMeans(10)
-k_means_data = benchmark_algorithm(dataset_sizes, k_means.fit, (), {})
-print('finished sklearn KMeans')
 dbscan = sklearn.cluster.DBSCAN(eps=1.25)
 dbscan_data = benchmark_algorithm(dataset_sizes, dbscan.fit, (), {})
+start_time = time.time()
+dbscan.fit(dataset)
+time_taken = time.time() - start_time
+print('data-specific time dbscan: ', time_taken)
+labels = dbscan.labels_
+
 print('finished dbscan')
-scipy_k_means_data = benchmark_algorithm(dataset_sizes,
-                                         scipy.cluster.vq.kmeans, (10,), {})
-print('finished scipy k means')
-
-scipy_single_data = benchmark_algorithm(dataset_sizes,
-                                        scipy.cluster.hierarchy.single, (), {})
-print('finished scipy single data')
-
-fastclust_data = benchmark_algorithm(dataset_sizes,
-                                     fastcluster.linkage_vector, (), {})
-print('finished scipy fastcluster')
+# scipy_k_means_data = benchmark_algorithm(dataset_sizes,
+#                                          scipy.cluster.vq.kmeans, (10,), {})
+# print('finished scipy k means')
+#
+# scipy_single_data = benchmark_algorithm(dataset_sizes,
+#                                         scipy.cluster.hierarchy.single, (), {})
+# print('finished scipy single data')
+#
+# fastclust_data = benchmark_algorithm(dataset_sizes,
+#                                      fastcluster.linkage_vector, (), {})
+# print('finished scipy fastcluster')
 
 hdbscan_ = hdbscan.HDBSCAN()
 hdbscan_data = benchmark_algorithm(dataset_sizes, hdbscan_.fit, (), {})
 print('finished hdbscan')
-
+start_time = time.time()
+hdbscan_.fit(dataset3d)
+time_taken = time.time() - start_time
+labels = hdbscan_.labels_
+print('data-specific time hdbscan: ', time_taken)
+plt.subplot(222)
+plt.scatter(dataset[:,0], dataset[:,1], c=labels)
+plt.savefig('hdbNoise.png')
 #debacl_data = benchmark_algorithm(dataset_sizes,
 #                                  debacl.geom_tree.geomTree, (5, 5), {'verbose':False})
 
@@ -82,39 +110,39 @@ print('finished hdbscan')
 #agg_data = benchmark_algorithm(dataset_sizes,
 #                               agglomerative.fit, (), {}, sample_size=4)
 #print('finished agglomerative')
-spectral = sklearn.cluster.SpectralClustering(10)
-spectral_data = benchmark_algorithm(dataset_sizes,
-                                    spectral.fit, (), {}, sample_size=6)
-print('finished spectral')
-affinity_prop = sklearn.cluster.AffinityPropagation()
-ap_data = benchmark_algorithm(dataset_sizes,
-                              affinity_prop.fit, (), {}, sample_size=3)
-print('finished affinityprop')
+# spectral = sklearn.cluster.SpectralClustering(10)
+# spectral_data = benchmark_algorithm(dataset_sizes,
+#                                     spectral.fit, (), {}, sample_size=6)
+# print('finished spectral')
+# affinity_prop = sklearn.cluster.AffinityPropagation()
+# ap_data = benchmark_algorithm(dataset_sizes,
+#                               affinity_prop.fit, (), {}, sample_size=3)
+# print('finished affinityprop')
 
 
 sns.regplot(x='x', y='y', data=k_means_data, order=2,
             label='Sklearn K-Means', x_estimator=np.mean)
 sns.regplot(x='x', y='y', data=dbscan_data, order=2,
             label='Sklearn DBSCAN', x_estimator=np.mean)
-sns.regplot(x='x', y='y', data=scipy_k_means_data, order=2,
-            label='Scipy K-Means', x_estimator=np.mean)
+# sns.regplot(x='x', y='y', data=scipy_k_means_data, order=2,
+#             label='Scipy K-Means', x_estimator=np.mean)
 sns.regplot(x='x', y='y', data=hdbscan_data, order=2,
             label='HDBSCAN', x_estimator=np.mean)
-sns.regplot(x='x', y='y', data=fastclust_data, order=2,
-            label='Fastcluster Single Linkage', x_estimator=np.mean)
-sns.regplot(x='x', y='y', data=scipy_single_data, order=2,
-            label='Scipy Single Linkage', x_estimator=np.mean)
+# sns.regplot(x='x', y='y', data=fastclust_data, order=2,
+#             label='Fastcluster Single Linkage', x_estimator=np.mean)
+# sns.regplot(x='x', y='y', data=scipy_single_data, order=2,
+#             label='Scipy Single Linkage', x_estimator=np.mean)
 #sns.regplot(x='x', y='y', data=debacl_data, order=2,
 #            label='DeBaCl Geom Tree', x_estimator=np.mean)
-sns.regplot(x='x', y='y', data=spectral_data, order=2,
-            label='Sklearn Spectral', x_estimator=np.mean)
+# sns.regplot(x='x', y='y', data=spectral_data, order=2,
+#             label='Sklearn Spectral', x_estimator=np.mean)
 #sns.regplot(x='x', y='y', data=agg_data, order=2,
 #            label='Sklearn Agglomerative', x_estimator=np.mean)
-sns.regplot(x='x', y='y', data=ap_data, order=2,
-            label='Sklearn Affinity Propagation', x_estimator=np.mean)
-plt.gca().axis([0, 34000, 0, 120])
+# sns.regplot(x='x', y='y', data=ap_data, order=2,
+#             label='Sklearn Affinity Propagation', x_estimator=np.mean)
+plt.gca().axis([0, 12000, 0, 1])
 plt.gca().set_xlabel('Number of data points')
 plt.gca().set_ylabel('Time taken to cluster (s)')
 plt.title('Performance Comparison of Clustering Implementations')
 plt.legend()
-plt.savefig('benchmark.png')
+#plt.savefig('benchmark.png')
