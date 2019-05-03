@@ -9,7 +9,7 @@ BN_param_map = {'scale':    'gamma',
                 'offset':   'beta',
                 'variance': 'moving_variance',
                 'mean':     'moving_mean'}
-                
+
 def layer(op):
     '''Decorator for composable network layers.'''
     def layer_decorated(self, *args, **kwargs):
@@ -43,7 +43,7 @@ class Network(object):
         self.terminals = []
         # Mapping from layer names to layers
         self.layers = dict(inputs)
-        
+
         self.trainable = trainable
 
         # Switch variable for dropout
@@ -54,37 +54,36 @@ class Network(object):
 
         # If true, the resulting variables are set as trainable
         self.is_training = cfg.is_training
-
         self.setup()
 
     def setup(self, is_training):
         '''Construct the network. '''
         raise NotImplementedError('Must be implemented by the subclass.')
-    
+
     def create_session(self):
         # Set up tf session and initialize variables.
         config = tf.ConfigProto()
         config.gpu_options.allow_growth = True
-        
+
         global_init = tf.global_variables_initializer()
         local_init = tf.local_variables_initializer()
-        
+
         self.sess = tf.Session(config=config)
         self.sess.run([global_init, local_init])
-        
+
     def restore(self, data_path, var_list=None):
         if data_path.endswith('.npy'):
             self.load_npy(data_path, self.sess)
         else:
             loader = tf.train.Saver(var_list=tf.global_variables())
             loader.restore(self.sess, data_path)
-        
+
         print('Restore from {}'.format(data_path))
-    
+
     def save(self, saver, save_dir, step):
         model_name = 'model.ckpt'
         checkpoint_path = os.path.join(save_dir, model_name)
-        
+
         if not os.path.exists(save_dir):
            os.makedirs(save_dir)
 
@@ -257,7 +256,7 @@ class Network(object):
     @layer
     def add(self, inputs, name):
         inputs[0] = tf.image.resize_bilinear(inputs[0], size=tf.shape(inputs[1])[1:3])
-        
+
         return tf.add_n(inputs, name=name)
 
     @layer
