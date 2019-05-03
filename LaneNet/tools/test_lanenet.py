@@ -13,7 +13,9 @@ import os.path as ops
 import argparse
 import time
 import math
+import sys
 
+sys.path = ['', '/root/root_dit_atlas/home/cjcramer/lane_lines/LaneNet', '/root/anaconda3/lib/python36.zip', '/root/anaconda3/lib/python3.6', '/root/anaconda3/lib/python3.6/lib-dynload', '/root/anaconda3/lib/python3.6/site-packages']
 import tensorflow as tf
 import glob
 import glog as log
