@@ -89,7 +89,7 @@ class TrainConfig(Config):
 
 def main():
     """Create the model and start the training."""
-    print("TESTING THIS HERE OMG HELLOOOOOOOOOOOOOO  ", tf.test.is_gpu_available())
+    #print("TESTING THIS HERE OMG HELLOOOOOOOOOOOOOO  ", tf.test.is_gpu_available())
     args = get_arguments()
 
     """
