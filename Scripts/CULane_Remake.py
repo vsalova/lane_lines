@@ -36,7 +36,7 @@ print("Successfully imported all")
 
 #!jupyter nbconvert --to script CULane_Remake.ipynb
 # Can use the command line argument instead:
-# jupyter nbconvert --to script CULane_Remake.ipynb
+#$jupyter nbconvert --to script CULane_Remake.ipynb
 
 
 # ## Print pretty with colors
@@ -71,12 +71,14 @@ def lane_width_px(y):
 # In[6]:
 
 
-def draw_lane(img, points, color):
+# @each row in @points should be of form (x,y)
+# @lane_number is the number to be placed in the grayscale image, which represents the class of the lane line
+def draw_lane(img, points, lane_number):
     # Draw a line in for each point
     for i in range(points.shape[0]):
         point = points[i, :]
         lane_width = lane_width_px(point[1])
-        cv2.line(img, (point[0] - lane_width // 2, point[1]), (point[0] + lane_width // 2, point[1]), color, 1) # Thickness = 1
+        cv2.line(img, (point[0] - lane_width // 2, point[1]), (point[0] + lane_width // 2, point[1]), lane_number, 1) # Thickness = 1
 
 
 # In[7]:
@@ -168,12 +170,12 @@ print("Number of annotations total: ", CMD_C.OKBLUE, len(annotation_paths), CMD_
 
 # ## Main loop
 
-# In[17]:
+# In[13]:
 
 
 plt.rcParams["figure.figsize"] = (20,10)
 ORDER = 6
-POLY_COLOR = (255, 255, 255)
+#POLY_COLOR = (255, 255, 255)
 POLY_THICKNESS = 20
 Y_POLY_POINT_STEP = 1
 
@@ -214,7 +216,7 @@ for i, annotation_path in enumerate(annotation_paths):
         img_1_x_vals = [np.polyval(img_1_coeef, y) for y in y_vals]
         img_1_poly_points = np.column_stack((img_1_x_vals, y_vals))
         img_1_poly_points = np.int32(img_1_poly_points)
-        draw_lane(remade_img, img_1_poly_points, POLY_COLOR)
+        draw_lane(remade_img, img_1_poly_points, 1)
         
     if img_2_points.shape[0] > 0:
         img_2_coeef = np.polyfit(img_2_points[:,0], img_2_points[:,1], ORDER)
@@ -222,7 +224,7 @@ for i, annotation_path in enumerate(annotation_paths):
         img_2_x_vals = [np.polyval(img_2_coeef, y) for y in y_vals]
         img_2_poly_points = np.column_stack((img_2_x_vals, y_vals))
         img_2_poly_points = np.int32(img_2_poly_points)
-        draw_lane(remade_img, img_2_poly_points, POLY_COLOR)
+        draw_lane(remade_img, img_2_poly_points, 2)
         
     if img_3_points.shape[0] > 0:
         img_3_coeef = np.polyfit(img_3_points[:,0], img_3_points[:,1], ORDER)
@@ -230,7 +232,7 @@ for i, annotation_path in enumerate(annotation_paths):
         img_3_x_vals = [np.polyval(img_3_coeef, y) for y in y_vals]
         img_3_poly_points = np.column_stack((img_3_x_vals, y_vals))
         img_3_poly_points = np.int32(img_3_poly_points)
-        draw_lane(remade_img, img_3_poly_points, POLY_COLOR)
+        draw_lane(remade_img, img_3_poly_points, 3)
         
     if img_4_points.shape[0] > 0:
         img_4_coeef = np.polyfit(img_4_points[:,0], img_4_points[:,1], ORDER)
@@ -238,7 +240,7 @@ for i, annotation_path in enumerate(annotation_paths):
         img_4_x_vals = [np.polyval(img_4_coeef, y) for y in y_vals]
         img_4_poly_points = np.column_stack((img_4_x_vals, y_vals))
         img_4_poly_points = np.int32(img_4_poly_points)
-        draw_lane(remade_img, img_4_poly_points, POLY_COLOR)
+        draw_lane(remade_img, img_4_poly_points, 4)
     
     print("processed ", sep="", end="")
     
@@ -271,10 +273,4 @@ for i, annotation_path in enumerate(annotation_paths):
 
 
 print("All done!")
-
-
-# In[ ]:
-
-
-# Still need to wrtie the polynomials as numbers 1,2,3,4, not just white pixels
 
