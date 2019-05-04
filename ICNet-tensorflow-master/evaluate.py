@@ -52,8 +52,13 @@ def main():
     elif cfg.dataset == 'cityscapes':
         mIoU, update_op = tf.metrics.mean_iou(predictions=pred, labels=gt, num_classes=cfg.param['num_classes'])
     elif cfg.dataset == 'culane':
-        pred = tf.add(pred, tf.constant(1, dtype=tf.int64))
-        mIoU, update_op = tf.metrics.mean_iou(predictions=pred, labels=gt, num_classes=cfg.param['num_classes'])
+        # pred = tf.add(pred, tf.constant(1, dtype=tf.int64))
+        # mIoU, update_op = tf.metrics.mean_iou(predictions=pred, labels=gt, num_classes=cfg.param['num_classes'])
+
+        indices = tf.squeeze(tf.where(tf.less_equal(gt, cfg.param['num_classes'] - 1)), 1)  # ignore all labels >= num_classes
+        gt = tf.cast(tf.gather(gt, indices), tf.int32)
+        pred = tf.gather(pred, indices)
+        mIoU, update_op = tf.contrib.metrics.streaming_mean_iou(pred, gt, num_classes=cfg.param['num_classes'])
 
     net.create_session()
     #net.restore(cfg.model_paths[args.model])
