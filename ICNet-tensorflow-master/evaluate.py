@@ -61,7 +61,7 @@ def main():
         mIoU, update_op = tf.contrib.metrics.streaming_mean_iou(pred, gt, num_classes=cfg.param['num_classes'])
 
     net.create_session()
-    #net.restore(cfg.model_paths[args.model])
+    net.restore(cfg.model_paths[args.model])
 
     for i in trange(cfg.param['eval_steps'], desc='evaluation', leave=True):
         _ = net.sess.run(update_op)
