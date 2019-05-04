@@ -56,3 +56,6 @@ datasets/CULane/*
 
 # Ignore core dumps
 core
+
+# Ignore large LaneNet model weights files
+LaneNet/model
