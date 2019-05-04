@@ -41,7 +41,8 @@ class Config(object):
               'trainval': './model/cityscapes/icnet_cityscapes_trainval_90k.npy',
               'train_bn': './model/cityscapes/icnet_cityscapes_train_30k_bnnomerge.npy',
               'trainval_bn': './model/cityscapes/icnet_cityscapes_trainval_90k_bnnomerge.npy',
-              'others': './model/ade20k/model.ckpt-27150'}
+              #'others': './model/ade20k/model.ckpt-27150'}
+              'others': './snapshots/model.ckpt-60000'}
 
     ## If you want to train on your own dataset, try to set these parameters.
     CULane_param = {'name': 'culane',
