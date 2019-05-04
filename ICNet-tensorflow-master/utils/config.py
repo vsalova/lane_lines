@@ -5,7 +5,7 @@ class Config(object):
     # Setting dataset directory
     CITYSCAPES_DATA_DIR = './data/cityscapes_dataset/cityscape/'
     ADE20K_DATA_DIR = './data/ADEChallengeData2016/'
-    CULANE_DATA_DIR = '/root/atlas/teams/team-1/Datasets/CULane_Dataset/'
+    CULANE_DATA_DIR = '/root/atlast_root/teams/team-1/Datasets/CULane_Dataset/'
 
     ADE20K_eval_list = os.path.join('./data/list/ade20k_val_list.txt')
     CITYSCAPES_eval_list = os.path.join('./data/list/cityscapes_val_list.txt')
@@ -41,7 +41,8 @@ class Config(object):
               'trainval': './model/cityscapes/icnet_cityscapes_trainval_90k.npy',
               'train_bn': './model/cityscapes/icnet_cityscapes_train_30k_bnnomerge.npy',
               'trainval_bn': './model/cityscapes/icnet_cityscapes_trainval_90k_bnnomerge.npy',
-              'others': './model/ade20k/model.ckpt-27150'}
+              #'others': './model/ade20k/model.ckpt-27150'}
+              'others': './snapshots/model.ckpt-60000'}
 
     ## If you want to train on your own dataset, try to set these parameters.
     CULane_param = {'name': 'culane',
