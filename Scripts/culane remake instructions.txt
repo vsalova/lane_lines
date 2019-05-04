@@ -1,0 +1,26 @@
+1. Make sure port bound in Putty first while connecting to Atlas
+
+2. Make Container:
+docker run -it --name=culane --privileged -p 9001:9001 -v /:/root/atlas_root lane_lines /bin/bash
+
+3. Start and run
+ docker start culane
+ docker attach culane
+
+4. Start jupyter notebook in container
+jupyter notebook --no-browser --ip=0.0.0.0 --allow-root --port=9001
+(copy token if starting first time)
+
+5. Enter localhost:9001 in Chrome to access
+
+6. Convert jupyer notebook to script:
+jupyter nbconvert --to script CULane_Remake.ipynb
+
+7. Run the python script
+python3 CULane_Remake.py 
+python3 CULane_Remake.py --no-vis
+
+
+
+Note: made an image after installed everything call `cv2_jupyter`
+docker commit culane cv2_jupyter
