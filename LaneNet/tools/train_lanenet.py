@@ -63,13 +63,24 @@ def train_net(dataset_dir, weights_path=None, net_flag='vgg'):
     :param weights_path:
     :return:
     """
+
+    print("DATASET directory: ", dataset_dir)
+
     train_dataset_file = ops.join(dataset_dir, 'train.txt')
     val_dataset_file = ops.join(dataset_dir, 'val.txt')
+
+    print("TRAIN_DATASET_FILE = ", train_dataset_file)
+    print("VAL_DATASET_FILE = ", val_dataset_file)
 
     assert ops.exists(train_dataset_file)
 
     train_dataset = lanenet_data_processor.DataSet(train_dataset_file)
     val_dataset = lanenet_data_processor.DataSet(val_dataset_file)
+
+    print("TRAIN_DATASET = ", train_dataset)
+    print("TRAIN_DATASET LENGTH = ", len(train_dataset._gt_img_list))
+    print("VAL_DATASET = ", val_dataset)
+    print("VAL_DATASET LENGTH = ", len(val_dataset._gt_img_list))
 
     with tf.device('/gpu:1'):
         input_tensor = tf.placeholder(dtype=tf.float32,
@@ -197,7 +208,7 @@ def train_net(dataset_dir, weights_path=None, net_flag='vgg'):
             # training part
             t_start = time.time()
 
-            with tf.device('/cpu:0'):
+            with tf.device('/gpu:0'):
                 gt_imgs, binary_gt_labels, instance_gt_labels = train_dataset.next_batch(CFG.TRAIN.BATCH_SIZE)
                 gt_imgs = [cv2.resize(tmp,
                                       dsize=(CFG.TRAIN.IMG_WIDTH, CFG.TRAIN.IMG_HEIGHT),
@@ -257,7 +268,7 @@ def train_net(dataset_dir, weights_path=None, net_flag='vgg'):
             summary_writer.add_summary(summary=train_summary, global_step=epoch)
 
             # validation part
-            with tf.device('/cpu:0'):
+            with tf.device('/gpu:0'):
                 gt_imgs_val, binary_gt_labels_val, instance_gt_labels_val \
                     = val_dataset.next_batch(CFG.TRAIN.VAL_BATCH_SIZE)
                 gt_imgs_val = [cv2.resize(tmp,
