@@ -52,6 +52,10 @@ class DataSet(object):
                 gt_img_list.append(info_tmp[0])
                 gt_label_list.append(info_tmp[1])
 
+        print("CREATED DATASET FROM ", dataset_info_file, ":", end="")
+        print("img list: ", self.gt_img_list)
+        print("label list: ", self.gt_label_list)
+
         return gt_img_list, gt_label_list
 
     def _random_dataset(self):
