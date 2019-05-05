@@ -59,3 +59,4 @@ core
 
 # Ignore large LaneNet model weights files
 LaneNet/model
+LaneNet/data/vgg16.npy
