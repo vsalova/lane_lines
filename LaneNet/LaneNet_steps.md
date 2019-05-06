@@ -115,3 +115,15 @@ Although we did not do this.
 
 
 ## Train on CuLane
+
+* Step 1: Reformat the CULane dataset to work with LaneNet
+
+	* Run the `CULane_Convert_LaneNet.py` script, you'll need to change some paths in the python file to get the right locations for your dataset and the lanenet model
+
+	* Follow the `CULane_remake_reformat_instructions.md` instructions. I recommend to first remake CULane to have better annotations first and then to convert it to be used for LaneNet.
+
+* Step 2: Make sure you copied the `culane_dataset_lanenet` folder into the `<lanenet folder>/data/` folder.
+
+* Step 3: Start training
+
+	`python3 tools/train_lanenet.py --net vgg --dataset_dir data/culane_dataset_lanenet/`
