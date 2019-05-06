@@ -38,4 +38,18 @@
 
 # Convert CULane to be used with LaneNet model
 
-* Step 0: Run this script:
+* Step 0: Make this script:
+
+    `jupyter nbconvert --to script CULane_Convert_LaneNet.ipynb`
+
+* Step 1: Run the script:
+    
+    `python3 CULane_Convert_LaneNet.py`
+
+    Or
+
+    `python3 CULane_Convert_LaneNet.py --no-vis`
+
+* Step 2: Copy the resulting folder to your LaneNet/data folder
+
+* Note this creates a 90 10 train validation split of the around 100k annotated images in CULane
