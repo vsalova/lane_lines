@@ -53,3 +53,7 @@
 * Step 2: Copy the resulting folder to your LaneNet/data folder
 
 * Note this creates a 90 10 train validation split of the around 100k annotated images in CULane
+
+
+/root/root_dit_atlas/home/cjcramer/lane_lines/LaneNet/data/gt_image_binary/17709.png
+                                                      data/culane_dataset_lanenet/gt_image_binary/17709.png
