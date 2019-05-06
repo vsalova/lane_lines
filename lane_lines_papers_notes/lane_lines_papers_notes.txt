@@ -132,7 +132,18 @@ Bayesian Network
 
 
 
- ICNet -- https://arxiv.org/pdf/1704.08545.pdf
+ICNet -- https://arxiv.org/pdf/1704.08545.pdf
+	High quality semantic segmentation exists, but not fast
+ 	** good picture on page 2 accuracy, FPS tradeoff **
+ 	Speed through doing full segmentation on low resolution image
+ 	
+ 	Image Cascade Network: (ICNet) downsample 1/2 size and 1/4 size and have 3 difference branches (low res, medium res, high res) then cascade
+ 		Segmenting high res too slow
+ 		1/4 size fed into PSPNet (another segmentation model)
+ 		Medium and full size branch are "light weight" CNNs while small 1/4 size is "heavy" weight (not many layers) weights shared between low and medium branches
+ 	Cascade Feature Fusion Unit: (fig 3) (fig 4 d) takes output of the 3 branches, trained with cascade feature guidance
+ 	Cascade Label Guidance: 
+
 
 
 
