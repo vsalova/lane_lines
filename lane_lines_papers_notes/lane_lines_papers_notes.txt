@@ -158,6 +158,8 @@ LaneNet -- https://arxiv.org/pdf/1807.01726.pdf
 		uses a light-weight encoder-decoder architecture
 		Decoding uses "sub-pixel convolution layers" with " beneficial properties including completely parameter-free and no computational cost" -- acutally its just a faster deconvolutional layer
 	Second Stage: 
+		
+
 
 
  

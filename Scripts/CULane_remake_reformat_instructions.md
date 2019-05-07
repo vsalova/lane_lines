@@ -15,6 +15,7 @@
  	`docker attach culane`
 
 * Step 4. Start jupyter notebook in container
+
 	`jupyter notebook --no-browser --ip=0.0.0.0 --allow-root --port=9001`
 	
 	Note: copy token if starting first time
@@ -54,6 +55,3 @@
 
 * Note this creates a 90 10 train validation split of the around 100k annotated images in CULane
 
-
-/root/root_dit_atlas/home/cjcramer/lane_lines/LaneNet/data/gt_image_binary/17709.png
-                                                      data/culane_dataset_lanenet/gt_image_binary/17709.png

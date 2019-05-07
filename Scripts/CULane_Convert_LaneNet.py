@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[2]:
 
 
 # usage: $python3 CULane_Convert_LaneNet.py
@@ -10,7 +10,7 @@
 
 # ## Imports
 
-# In[2]:
+# In[3]:
 
 
 from shutil import copy
@@ -31,20 +31,20 @@ print("Successfully imported all")
 
 # ## Constants and paths
 
-# In[3]:
+# In[4]:
 
 
 cwd = os.getcwd() + "/"
 print("CWD: ", cwd)
 
 
-# In[4]:
+# In[5]:
 
 
 display_results = False if sys.argv[-1] == "--no-vis" else True
 
 
-# In[5]:
+# In[6]:
 
 
 export_folder_name = cwd + "culane_dataset_lanenet/"
@@ -55,7 +55,7 @@ export_instance_dir = export_folder_name + "gt_image_instance/"
 export_binary_dir = export_folder_name + "gt_image_binary/"
 
 # CHANGE THIS TO THE LOCATION OF YOUR LANENET DATA FOLDER
-base_export_dir = "/root/root_dit_atlas/home/cjcramer/lane_lines/LaneNet/data/"
+base_export_dir = "/root/root_dit_atlas/home/cjcramer/lane_lines/LaneNet/data/culane_dataset_lanenet/"
 print("base_export_dir: ", base_export_dir)
 
 image_dir = base_export_dir + "image/"
@@ -78,7 +78,7 @@ annotation_dir = data_base_dir + "laneseg_label_w16/"
 
 # ## Convert notebook to python file
 
-# In[6]:
+# In[7]:
 
 
 #!jupyter nbconvert --to script CULane_Remake.ipynb
@@ -88,7 +88,7 @@ annotation_dir = data_base_dir + "laneseg_label_w16/"
 
 # ## Print pretty with colors
 
-# In[7]:
+# In[8]:
 
 
 # Credit: https://stackoverflow.com/questions/287871/print-in-terminal-with-colors
@@ -105,7 +105,7 @@ class CMD_C:
 
 # ## Helper functions
 
-# In[8]:
+# In[9]:
 
 
 def make_dir(dir_path):
@@ -124,7 +124,7 @@ def make_dir(dir_path):
 
 # # Gather all file paths
 
-# In[9]:
+# In[10]:
 
 
 # Credit: https://www.mkyong.com/python/python-how-to-list-all-files-in-a-directory/
@@ -138,13 +138,24 @@ print("Number of annotations total: ", CMD_C.OKBLUE, len(annotation_paths), CMD_
 
 # # Gather corresponding actual pictures 
 
-# In[10]:
+# In[12]:
 
 
 paths = []   # CULane img, CULane annot, In LaneNet img, in LaneNet binary, in LaneNet inst, copy to img, copy to binary, copy to inst 
 new_file_name_counter = 0      # Since CULane has many files with the same name in different directories, enumerate the pictures.
+num_blank = 0
 
-for annot_path in annotation_paths:
+print("Gathering paths and determining which images are blank...")
+percent = len(annotation_paths) // 100
+print_at = percent
+
+for i, annot_path in enumerate(annotation_paths):
+    # Skip past all blank pictures
+    img = cv2.imread(annot_path, cv2.IMREAD_COLOR)
+    if np.sum(img) == 0:
+        num_blank += 1
+        continue
+    
     tok = annot_path.split("/")
     filename = tok[-1]
     filename_no_ext = filename.split(".")[0]
@@ -167,7 +178,11 @@ for annot_path in annotation_paths:
     paths.append((path_to_file, annot_path, image_path_lanenet, binary_path_lanenet, instance_path_lanenet, export_image_path_lanenet, export_binary_path_lanenet, export_instance_path_lanenet))
     new_file_name_counter += 1
     
+    if i >= print_at:
+        print(str(print_at) + "/" + str(len(annotation_paths)), "so far, num blanks = ", str(num_blank))
+        print_at += percent 
     
+print("Number blank annotations: ", num_blank)
 print("Example paths")
 for i in range(0, 2):
     print(paths[i][0])
@@ -182,7 +197,7 @@ for i in range(0, 2):
 
 # # Make destination folder to save all outputs to
 
-# In[11]:
+# In[ ]:
 
 
 folders_to_create = [export_folder_name, export_folder_name + "image/", export_folder_name + "gt_image_instance/", export_folder_name + "gt_image_binary/"]
@@ -193,7 +208,7 @@ for folder in folders_to_create:
 
 # # Save train.txt and val.txt
 
-# In[12]:
+# In[ ]:
 
 
 # 0.9 to 0.1 train val split
@@ -210,7 +225,7 @@ print("Wrote train.txt and val.txt")
 
 # ## Main loop
 
-# In[13]:
+# In[ ]:
 
 
 plt.rcParams["figure.figsize"] = (20,10)
@@ -231,9 +246,9 @@ for CU_img_path, CU_annot_path, _, _, _, export_img_path, export_bin_path, expor
         img = cv2.imread(CU_img_path, cv2.IMREAD_COLOR)
         save_success = cv2.imwrite(export_img_path, img)
         if save_success == False:
-            print(CMD_C.FAIL, "Could not copy file: ", culane_pict_path, CMD_C.ENDC, " to ", CMD_C.FAIL, img_copy_dest, CMD_C.ENDC, sep="", end="")
+            print(CMD_C.FAIL, "Could not copy file: ", CU_img_path, CMD_C.ENDC, " to ", CMD_C.FAIL, export_img_path, CMD_C.ENDC, sep="", end="")
     except:
-        print(CMD_C.FAIL, "Could not copy file: ", culane_pict_path, CMD_C.ENDC, " to ", CMD_C.FAIL, img_copy_dest, CMD_C.ENDC, sep="", end="")
+        print(CMD_C.FAIL, "Could not copy file: ", CU_img_path, CMD_C.ENDC, " to ", CMD_C.FAIL, export_img_path, CMD_C.ENDC, sep="", end="")
     else:
         print(" copied img | ", sep="", end="")
     
@@ -291,7 +306,7 @@ for CU_img_path, CU_annot_path, _, _, _, export_img_path, export_bin_path, expor
     print()
 
 
-# In[14]:
+# In[ ]:
 
 
 print("All done!")
