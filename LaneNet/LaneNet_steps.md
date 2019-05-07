@@ -145,6 +145,18 @@ Although we did not do this.
 
 	* Change the training learning rate from `0.0005` to `0.0004`
 
-* Step 5: Start training
+* Step 5: Start training from TuSimple model (recommended)
+
+	`python3 tools/train_lanenet.py --net vgg --dataset_dir data/culane_dataset_lanenet/ --weights_path model/culane_lanenet/checkpoint`
+
+* Step 6: Start training from scratch
 
 	`python3 tools/train_lanenet.py --net vgg --dataset_dir data/culane_dataset_lanenet/`
+
+* Step 7: Start training from checkpoint
+
+	`python3 tools/train_lanenet.py --net vgg --dataset_dir data/culane_dataset_lanenet/ --weights_path model/tusimple_lanenet_orig/tusimple_lanenet_vgg_2018-10-19-13-33-56.ckpt-200000`
+
+	After 3600 epochs:
+
+	`python3 tools/train_lanenet.py --net vgg --dataset_dir data/culane_dataset_lanenet/ --weights_path model/culane_lanenet/culane_lanenet_vgg_2019-05-06-23-28-26.ckpt-2000`
