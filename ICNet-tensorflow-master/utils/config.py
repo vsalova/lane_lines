@@ -16,7 +16,7 @@ class Config(object):
     CITYSCAPES_train_list = os.path.join('./data/list/cityscapes_train_list.txt')
     CULANE_train_list = os.path.join('./data/list/train_gt.txt')
 
-
+    #used to normalize -- will have to adjust this or look up the mean
     IMG_MEAN = np.array((103.939, 116.779, 123.68), dtype=np.float32)
 
     ADE20k_param = {'name': 'ade20k',
@@ -46,7 +46,7 @@ class Config(object):
 
     ## If you want to train on your own dataset, try to set these parameters.
     CULane_param = {'name': 'culane',
-                'num_classes': 2,
+                'num_classes': 5,
                 'ignore_label': 100,
                 'eval_size': [480, 480],
                 'eval_steps': 2000,
