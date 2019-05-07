@@ -9,22 +9,22 @@ class ICNet(Network):
         self.mode = mode
 
         if mode == 'train':
-            self.images, self.labels = image_reader.next_image, image_reader.next_label    
-        
+            self.images, self.labels = image_reader.next_image, image_reader.next_label
+
             super().__init__(inputs={'data': self.images}, cfg=self.cfg)
 
         elif mode == 'eval':
-            self.images, self.labels = image_reader.next_image, image_reader.next_label    
-        
+            self.images, self.labels = image_reader.next_image, image_reader.next_label
+
             super().__init__(inputs={'data': self.images}, cfg=self.cfg)
-            
+
             self.output = self.get_output_node()
 
         elif mode == 'inference':
             # Create placeholder and pre-process here.
             self.img_placeholder = tf.placeholder(dtype=tf.float32, shape=cfg.INFER_SIZE)
             self.images, self.o_shape, self.n_shape = _infer_preprocess(self.img_placeholder)
-            
+
             super().__init__(inputs={'data': self.images}, cfg=self.cfg)
 
             self.output = self.get_output_node()
@@ -297,22 +297,22 @@ class ICNet_BN(Network):
         self.mode = mode
 
         if mode == 'train':
-            self.images, self.labels = image_reader.next_image, image_reader.next_label    
-        
+            self.images, self.labels = image_reader.next_image, image_reader.next_label
+
             super().__init__(inputs={'data': self.images}, cfg=self.cfg)
 
         elif mode == 'eval':
-            self.images, self.labels = image_reader.next_image, image_reader.next_label    
-        
+            self.images, self.labels = image_reader.next_image, image_reader.next_label
+
             super().__init__(inputs={'data': self.images}, cfg=self.cfg)
-            
+
             self.output = self.get_output_node()
 
         elif mode == 'inference':
             # Create placeholder and pre-process here.
             self.img_placeholder = tf.placeholder(dtype=tf.float32, shape=cfg.INFER_SIZE)
             self.images, self.o_shape, self.n_shape = _infer_preprocess(self.img_placeholder)
-            
+
             super().__init__(inputs={'data': self.images}, cfg=self.cfg)
 
             self.output = self.get_output_node()

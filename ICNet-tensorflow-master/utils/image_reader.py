@@ -33,6 +33,7 @@ def read_labeled_image_list(data_dir, data_list):
 
     return images, masks
 
+# over here possibly
 def prepare_label(input_batch, new_size, num_classes, one_hot=True):
     with tf.name_scope('label_encode'):
         input_batch = tf.image.resize_nearest_neighbor(input_batch, new_size) # as labels are integer numbers, need to use NN interp.
