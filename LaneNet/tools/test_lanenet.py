@@ -15,7 +15,7 @@ import time
 import math
 import sys
 
-sys.path = ['', '/root/root_dit_atlas/home/cjcramer/lane_lines/LaneNet', '/root/anaconda3/lib/python36.zip', '/root/anaconda3/lib/python3.6', '/root/anaconda3/lib/python3.6/lib-dynload', '/root/anaconda3/lib/python3.6/site-packages']
+#sys.path = ['', '/root/root_dit_atlas/home/cjcramer/lane_lines/LaneNet', '/root/anaconda3/lib/python36.zip', '/root/anaconda3/lib/python3.6', '/root/anaconda3/lib/python3.6/lib-dynload', '/root/anaconda3/lib/python3.6/site-packages']
 import tensorflow as tf
 import glob
 import glog as log
@@ -145,12 +145,16 @@ def test_lanenet_batch(image_dir, weights_path, batch_size, use_gpu, save_dir=No
     :param save_dir:
     :return:
     """
+    print("save_dir in function: ", save_dir)
+
     assert ops.exists(image_dir), '{:s} not exist'.format(image_dir)
 
     log.info('开始获取图像文件路径...')
     image_path_list = glob.glob('{:s}/**/*.jpg'.format(image_dir), recursive=True) + \
                       glob.glob('{:s}/**/*.png'.format(image_dir), recursive=True) + \
                       glob.glob('{:s}/**/*.jpeg'.format(image_dir), recursive=True)
+
+    print("NUMBER OF IMAGES IN IMAGE_PATH: ", len(image_path_list))
 
     input_tensor = tf.placeholder(dtype=tf.float32, shape=[None, 256, 512, 3], name='input_tensor')
     phase_tensor = tf.constant('test', tf.string)
@@ -178,7 +182,11 @@ def test_lanenet_batch(image_dir, weights_path, batch_size, use_gpu, save_dir=No
 
         saver.restore(sess=sess, save_path=weights_path)
 
+        print("SUCCESSFULLY RESTORED FROM SESSION")
+
         epoch_nums = int(math.ceil(len(image_path_list) / batch_size))
+
+        print("EPOCH_NUMS = ", epoch_nums)
 
         for epoch in range(epoch_nums):
             log.info('[Epoch:{:d}] 开始图像读取和预处理...'.format(epoch))
@@ -222,10 +230,14 @@ def test_lanenet_batch(image_dir, weights_path, batch_size, use_gpu, save_dir=No
                     plt.ioff()
 
                 if save_dir is not None:
-                    mask_image = cv2.addWeighted(image_vis_list[index], 1.0, mask_image, 1.0, 0)
+                    # Mask is the predicted lane line pixels with colors on a black background
+                    # After this line it will layer the lines on the actual image
+                    # Comment it out to save just the predictions
+                    #mask_image = cv2.addWeighted(image_vis_list[index], 1.0, mask_image, 1.0, 0)
                     image_name = ops.split(image_path_epoch[index])[1]
                     image_save_path = ops.join(save_dir, image_name)
                     cv2.imwrite(image_save_path, mask_image)
+                    print("SAVED MASK IMAGE TO ", image_save_path)
 
             log.info('[Epoch:{:d}] 进行{:d}张图像车道线聚类, 共耗时: {:.5f}s, 平均每张耗时: {:.5f}'.format(
                 epoch, len(image_path_epoch), np.sum(cluster_time), np.mean(cluster_time)))
@@ -239,9 +251,19 @@ if __name__ == '__main__':
     # init args
     args = init_args()
 
+    #path = "/root/root_dit_atlas/teams/team-1/Datasets/TuSimple/train_set/clips/0313-2/58980"
+    #print("Path: ", path)
+    #print("Path exists? ", os.path.exists(path))
+    #print("Ending early test")
+    #quit()
+
     if args.save_dir is not None and not ops.exists(args.save_dir):
         log.error('{:s} not exist and has been made'.format(args.save_dir))
         os.makedirs(args.save_dir)
+
+    print("USING SAVE DIRECTORY: ", args.save_dir)
+    cwd = os.getcwd()
+    print("CWD: ", cwd)
 
     if args.is_batch.lower() == 'false':
         # test hnet model on single image

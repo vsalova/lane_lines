@@ -55,3 +55,20 @@
 
 * Note this creates a 90 10 train validation split of the around 100k annotated images in CULane
 
+# Combine Images into a Video script
+
+* Step 0: Make this script:
+
+    `jupyter nbconvert --to script Combine_Image_Dir_To_Video.ipynb`
+
+* Step 1: Run the script:
+    
+    `python3 Combine_Image_Dir_To_Video.py <path_to_image_dir> <name_of_output_video_file.WHAT>`
+
+    In our case, it was:
+
+    `python3 Combine_Image_Dir_To_Video.py ../LaneNet/output_frames COMBINED_VIDEO.avi`
+
+Note that the combined video name should be a local name, not a path to somewhere else
+
+Note THE PICTURES MUST BE NAMED WITH NUMBERS IN INCREASING ORDER
