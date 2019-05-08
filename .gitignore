@@ -62,3 +62,4 @@ LaneNet/model
 LaneNet/data/vgg16.npy
 Scripts/culane_dataset_lanenet/
 /LaneNet/data/culane_dataset_lanenet/
+/LaneNet/output_frames/
