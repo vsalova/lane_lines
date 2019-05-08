@@ -5,7 +5,7 @@ class Config(object):
     # Setting dataset directory
     CITYSCAPES_DATA_DIR = './data/cityscapes_dataset/cityscape/'
     ADE20K_DATA_DIR = './data/ADEChallengeData2016/'
-    CULANE_DATA_DIR = '/root/atlast_root/teams/team-1/Datasets/CULane_Dataset/'
+    CULANE_DATA_DIR = '/root/atlast_root/teams/team-1/Datasets/CULane_Dataset_RGB/'
 
     ADE20K_eval_list = os.path.join('./data/list/ade20k_val_list.txt')
     CITYSCAPES_eval_list = os.path.join('./data/list/cityscapes_val_list.txt')
@@ -17,7 +17,7 @@ class Config(object):
     CULANE_train_list = os.path.join('./data/list/train_gt.txt')
 
     #used to normalize -- will have to adjust this or look up the mean
-    IMG_MEAN = np.array((103.939, 116.779, 123.68), dtype=np.float32)
+    IMG_MEAN = np.array((94.09, 93.74, 92.29), dtype=np.float32)
 
     ADE20k_param = {'name': 'ade20k',
                 'num_classes': 150, # predict: [0~149] corresponding to label [1~150], ignore class 0 (background)
