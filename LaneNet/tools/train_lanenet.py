@@ -131,15 +131,15 @@ def train_net(dataset_dir, weights_path=None, net_flag='vgg'):
 
     # Set tf saver
     saver = tf.train.Saver()
-    model_save_dir = 'model/tusimple_lanenet'
+    model_save_dir = 'model/culane_lanenet_2'
     if not ops.exists(model_save_dir):
         os.makedirs(model_save_dir)
     train_start_time = time.strftime('%Y-%m-%d-%H-%M-%S', time.localtime(time.time()))
-    model_name = 'tusimple_lanenet_{:s}_{:s}.ckpt'.format(net_flag, str(train_start_time))
+    model_name = 'culane_lanenet_2_{:s}_{:s}.ckpt'.format(net_flag, str(train_start_time))
     model_save_path = ops.join(model_save_dir, model_name)
 
     # Set tf summary
-    tboard_save_path = 'tboard/tusimple_lanenet/{:s}'.format(net_flag)
+    tboard_save_path = 'tboard/culane_lanenet_2/{:s}'.format(net_flag)
     if not ops.exists(tboard_save_path):
         os.makedirs(tboard_save_path)
     train_cost_scalar = tf.summary.scalar(name='train_cost', tensor=total_loss)

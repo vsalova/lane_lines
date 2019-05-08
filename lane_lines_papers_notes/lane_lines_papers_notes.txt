@@ -132,12 +132,33 @@ Bayesian Network
 
 
 
- ICNet -- https://arxiv.org/pdf/1704.08545.pdf
+ICNet -- https://arxiv.org/pdf/1704.08545.pdf
+	High quality semantic segmentation exists, but not fast
+ 	** good picture on page 2 accuracy, FPS tradeoff **
+ 	Speed through doing full segmentation on low resolution image
+ 	
+ 	Image Cascade Network: (ICNet) downsample 1/2 size and 1/4 size and have 3 difference branches (low res, medium res, high res) then cascade
+ 		Segmenting high res too slow
+ 		1/4 size fed into PSPNet (another segmentation model)
+ 		Medium and full size branch are "light weight" CNNs while small 1/4 size is "heavy" weight (not many layers) weights shared between low and medium branches
+ 	Cascade Feature Fusion Unit: (fig 3) (fig 4 d) takes output of the 3 branches, trained with cascade feature guidance
+ 	Cascade Label Guidance: training the CFF
+ 	"While in our cascade structure, only the lowest-resolution input is fed into the heavy CNN with much reduced computation to get the coarse semantic prediction. The higher-res inputs are designed to recover and refine the prediction progressively regarding blurred boundaries and missing details."
 
 
 
- LaneNet -- https://arxiv.org/pdf/1807.01726.pdf
 
+LaneNet -- https://arxiv.org/pdf/1807.01726.pdf
+	"two stages: lane edge proposal and lane line localization" each state independent DNN
+	"Stage one uses a lane edge proposal network for pixel-wise lane edge classification, and the lane line localization network in stage two then detects lane lines based on lane edge proposals."
+	LaneNet is not general purpose semantic segmentation, only lane-line detection
+	Inverse Perspective Mapping (IPM) = Input to LaneNet
+		https://csyhhu.github.io/2015/07/09/IPM/
+	First stage: Lane edge proposal = binary classiffication of all lane edges, fed into second stage:
+		uses a light-weight encoder-decoder architecture
+		Decoding uses "sub-pixel convolution layers" with " beneficial properties including completely parameter-free and no computational cost" -- acutally its just a faster deconvolutional layer
+	Second Stage: 
+		
 
 
 

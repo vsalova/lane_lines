@@ -54,7 +54,7 @@ def discriminative_loss_single(
     mu_expand = tf.gather(mu, unique_id)
 
     # 计算公式的loss(var)
-    distance = tf.norm(tf.subtract(mu_expand, reshaped_pred), axis=1)
+    distance = tf.norm(tf.subtract(mu_expand, reshaped_pred), axis=1, ord=1)
     distance = tf.subtract(distance, delta_v)
     distance = tf.clip_by_value(distance, 0., distance)
     distance = tf.square(distance)
@@ -81,7 +81,7 @@ def discriminative_loss_single(
     bool_mask = tf.not_equal(intermediate_tensor, zero_vector)
     mu_diff_bool = tf.boolean_mask(mu_diff, bool_mask)
 
-    mu_norm = tf.norm(mu_diff_bool, axis=1)
+    mu_norm = tf.norm(mu_diff_bool, axis=1, ord=1)
     mu_norm = tf.subtract(2. * delta_d, mu_norm)
     mu_norm = tf.clip_by_value(mu_norm, 0., mu_norm)
     mu_norm = tf.square(mu_norm)
@@ -89,7 +89,7 @@ def discriminative_loss_single(
     l_dist = tf.reduce_mean(mu_norm)
 
     # 计算原始Discriminative Loss论文中提到的正则项损失
-    l_reg = tf.reduce_mean(tf.norm(mu, axis=1))
+    l_reg = tf.reduce_mean(tf.norm(mu, axis=1, ord=1))
 
     # 合并损失按照原始Discriminative Loss论文中提到的参数合并
     param_scale = 1.
