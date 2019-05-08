@@ -38,7 +38,7 @@ def get_mask(gt, num_classes, ignore_label):
     not_equal_ignore = tf.not_equal(gt, ignore_label)
     mask = tf.logical_and(less_equal_class, not_equal_ignore)
     indices = tf.squeeze(tf.where(mask), 1)
-    
+
 
     return indices
 
