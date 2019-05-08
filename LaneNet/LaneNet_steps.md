@@ -30,7 +30,12 @@
 
 * Step 6: Add folder to python3 path:
 
-	`export PYTHONPATH="${PYTHONPATH}:/<path-to-lanenet-parentdir>/LaneNet/lanenet_model"`
+	`export PYTHONPATH="${PYTHONPATH}:/<path-to-lanenet-parentdir>/LaneNet/"`
+
+	For us, the exported path was:
+
+	`export PYTHONPATH="${PYTHONPATH}:/root/root_dit_atlas/home/cjcramer/lane_lines/LaneNet/"`
+
 
 * Step 7: Run the test script:
 
@@ -115,3 +120,43 @@ Although we did not do this.
 
 
 ## Train on CuLane
+
+* Step 1: Reformat the CULane dataset to work with LaneNet
+
+	* Run the `CULane_Convert_LaneNet.py` script, you'll need to change some paths in the python file to get the right locations for your dataset and the lanenet model
+
+	* Follow the `CULane_remake_reformat_instructions.md` instructions. I recommend to first remake CULane to have better annotations first and then to convert it to be used for LaneNet.
+
+* Step 2: Make sure you copied the `culane_dataset_lanenet` folder into the `<lanenet folder>/data/` folder.
+
+* Step 3: In `tools/train_lanenet.py` change:
+
+	* Line 134: `model_save_dir = 'model/culane_lanenet'`
+
+	* Line 138: `model_name = 'culane_lanenet_{:s}_{:s}.ckpt'.format......`
+
+	* Line 142: `tboard_save_path = 'tboard/culane_lanenet/{:s}'.format(net_flag)`
+
+	Change to L1 normalization: in `lanenet_model\lanenet_discriminative_loss.py`:
+
+	* For Lines 57, 84, 92, change `tf.norm(....., axis=1)` to include a `ord=1` option: `tf.norm(....., axis=1, ord=1)`	
+
+* Step 4: Modify hyperparameters in `config\global_config.py`:
+
+	* Change the training learning rate from `0.0005` to `0.0004`
+
+* Step 5: Start training from TuSimple model (recommended)
+
+	`python3 tools/train_lanenet.py --net vgg --dataset_dir data/culane_dataset_lanenet/ --weights_path model/culane_lanenet/checkpoint`
+
+* Step 6: Start training from scratch
+
+	`python3 tools/train_lanenet.py --net vgg --dataset_dir data/culane_dataset_lanenet/`
+
+* Step 7: Start training from checkpoint
+
+	`python3 tools/train_lanenet.py --net vgg --dataset_dir data/culane_dataset_lanenet/ --weights_path model/tusimple_lanenet_orig/tusimple_lanenet_vgg_2018-10-19-13-33-56.ckpt-200000`
+
+	After 3600 epochs:
+
+	`python3 tools/train_lanenet.py --net vgg --dataset_dir data/culane_dataset_lanenet/ --weights_path model/culane_lanenet/culane_lanenet_vgg_2019-05-06-23-28-26.ckpt-2000`

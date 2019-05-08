@@ -9,6 +9,7 @@
 实现LaneNet的数据解析类
 """
 import os.path as ops
+import os
 
 import cv2
 import numpy as np
@@ -111,7 +112,17 @@ class DataSet(object):
             for gt_label_path in gt_label_binary_list:
                 #print("Trying to open image label path: ",gt_label_path)
                 label_img = cv2.imread(gt_label_path, cv2.IMREAD_COLOR)
+                try_again_count = 0
+                while label_img is None and try_again_count < 10000:
+                    print("Trying to read file again, sometimes cv2 fails")
+                    label_img = cv2.imread(gt_label_path, cv2.IMREAD_COLOR)
+                    try_again_count += 1
+
                 #print("Opened imaged: ", label_img)
+                if label_img is None:
+                    print("COULDN'T OPEN ", gt_label_path)
+                    print("FILE EXISTS? : ", os.path.isfile(gt_label_path))
+
                 label_binary = np.zeros([label_img.shape[0], label_img.shape[1]], dtype=np.uint8)
                 idx = np.where((label_img[:, :, :] != [0, 0, 0]).all(axis=2))
                 label_binary[idx] = 1
