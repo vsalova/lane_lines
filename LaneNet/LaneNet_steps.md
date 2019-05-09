@@ -193,8 +193,10 @@ See the `CULane_remake_reformat_instructions.md` file in `Scripts/` folder.
 
 ## Infer on Video with postprocessing
 
-	Make sure you are in the root directory of LaneNet
+Make sure you are in the root directory of LaneNet
 
-	You'll want to go into the python file to change some stuff probably.
+You'll want to go into the python file to change some stuff probably.
+
+You can change the colors of the lane lines, the directories used for the videos, and other stuff in `test_lanenet_postprocess.py`	
 
 	`python3 tools/test_lanenet_postprocess.py`

@@ -63,3 +63,7 @@ LaneNet/data/vgg16.npy
 Scripts/culane_dataset_lanenet/
 /LaneNet/data/culane_dataset_lanenet/
 /LaneNet/output_frames/
+/LaneNet/output_frames_raw_output/
+/Scripts/COMBINED_VIDEO.avi
+/Scripts/COMBINED_VIDEO_POST_PROCESS.avi
+
