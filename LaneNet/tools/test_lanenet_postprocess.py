@@ -273,7 +273,7 @@ def test_lanenet_batch(image_dir, weights_path, batch_size, use_gpu, save_dir=No
                     # After this line it will layer the lines on the actual image
                     # Comment it out to save just the predictions
                     mask_image = cv2.addWeighted(image_vis_list[index], 1.0, mask_image, 1.0, 0)
-                    
+
                     image_name = ops.split(image_path_epoch[index])[1]
                     image_save_path = ops.join(save_dir, image_name)
                     cv2.imwrite(image_save_path, mask_image)
