@@ -144,7 +144,7 @@ def main():
 
     # Create session & restore weights (Here we only need to use train_net to create session since we reuse it)
     train_net.create_session()
-    #train_net.restore(cfg.model_weight, restore_var)
+    # train_net.restore(cfg.model_weight, restore_var)
     saver = tf.train.Saver(var_list=tf.global_variables(), max_to_keep=5)
 
     # Iterate over training steps.

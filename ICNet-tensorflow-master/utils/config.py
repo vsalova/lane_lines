@@ -42,22 +42,23 @@ class Config(object):
               'train_bn': './model/cityscapes/icnet_cityscapes_train_30k_bnnomerge.npy',
               'trainval_bn': './model/cityscapes/icnet_cityscapes_trainval_90k_bnnomerge.npy',
               #'others': './model/ade20k/model.ckpt-27150'}
-              'others': './snapshots/model.ckpt-60000'}
+              # 'others': './snapshots/model.ckpt-60000'}
+              'others': './snapshots/model.ckpt-8000'}
 
     ## If you want to train on your own dataset, try to set these parameters.
     CULane_param = {'name': 'culane',
                 'num_classes': 5,
-                'ignore_label': 100,
-                'eval_size': [480, 480],
+                'ignore_label': 0,
+                'eval_size': [591, 1641],
                 'eval_steps': 2000,
                 'eval_list': CULANE_eval_list,
                 'train_list': CULANE_train_list,
                 'data_dir': CULANE_DATA_DIR}
 
     ## You can modify following lines to train different training configurations.
-    INFER_SIZE = [1024, 2048, 3]
+    INFER_SIZE = [590, 1640, 3]
     TRAINING_SIZE = [720, 720]
-    TRAINING_STEPS = 60001
+    TRAINING_STEPS = 30001
 
     N_WORKERS = 8
     BATCH_SIZE = 16
