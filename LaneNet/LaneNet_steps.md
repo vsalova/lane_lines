@@ -145,6 +145,8 @@ Although we did not do this.
 
 	* Change the training learning rate from `0.0005` to `0.0004`
 
+	* Change the batch size from 8 to 14
+
 * Step 5: Start training from TuSimple model (recommended)
 
 	`python3 tools/train_lanenet.py --net vgg --dataset_dir data/culane_dataset_lanenet/ --weights_path model/culane_lanenet/checkpoint`
@@ -160,3 +162,41 @@ Although we did not do this.
 	After 3600 epochs:
 
 	`python3 tools/train_lanenet.py --net vgg --dataset_dir data/culane_dataset_lanenet/ --weights_path model/culane_lanenet/culane_lanenet_vgg_2019-05-06-23-28-26.ckpt-2000`
+
+
+## Infer on Video 
+
+
+Make sure to be in the base directory of LaneNet
+
+Have the `output_frames` directory created in the base directory of LaneNet
+
+Testing running batch
+
+	`python3 tools/test_lanenet.py --is_batch True --batch_size 1 --weights_path model/tusimple_lanenet/tusimple_lanenet_vgg_2018-10-19-13-33-56.ckpt-200000 --image_path data/tusimple_test_image/ --use_gpu 0 --save_dir output_frames/`
+
+
+Test on TuSimple folder
+
+	`python3 tools/test_lanenet.py --is_batch True --batch_size 1 --weights_path model/tusimple_lanenet/tusimple_lanenet_vgg_2018-10-19-13-33-56.ckpt-200000 --image_path /root/root_dit_atlas/teams/team-1/Datasets/TuSimple/train_set/clips/0313-2/58980 --use_gpu 0 --save_dir output_frames/vid1`
+
+Another teston a TuSimple folder
+
+	`python3 tools/test_lanenet.py --is_batch True --batch_size 1 --weights_path model/tusimple_lanenet/tusimple_lanenet_vgg_2018-10-19-13-33-56.ckpt-200000 --image_path /root/root_dit_atlas/teams/team-1/Datasets/TuSimple/train_set/clips/0313-2/13380 --use_gpu 0 --save_dir output_frames/vid2`
+
+	...
+
+Combine the images into video
+
+See the `CULane_remake_reformat_instructions.md` file in `Scripts/` folder.
+
+
+## Infer on Video with postprocessing
+
+Make sure you are in the root directory of LaneNet
+
+You'll want to go into the python file to change some stuff probably.
+
+You can change the colors of the lane lines, the directories used for the videos, and other stuff in `test_lanenet_postprocess.py`	
+
+	`python3 tools/test_lanenet_postprocess.py`
