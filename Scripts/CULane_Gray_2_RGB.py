@@ -10,7 +10,7 @@
 
 # ## Imports
 
-# In[3]:
+# In[2]:
 
 
 #from shutil import copy
@@ -31,7 +31,7 @@ print("Successfully imported all")
 
 # ## Convert notebook to python file
 
-# In[4]:
+# In[3]:
 
 
 #!jupyter nbconvert --to script CULane_Remake.ipynb
@@ -41,7 +41,7 @@ print("Successfully imported all")
 
 # ## Print pretty with colors
 
-# In[5]:
+# In[4]:
 
 
 # Credit: https://stackoverflow.com/questions/287871/print-in-terminal-with-colors
@@ -61,14 +61,14 @@ class CMD_C:
 # ### Parse Command Args, other setup
 # 
 
-# In[6]:
+# In[5]:
 
 
 display_results = False if sys.argv[-1] == "--no-vis" else True
 print("Display results? = ", display_results)
 
 
-# In[7]:
+# In[6]:
 
 
 cwd = os.getcwd()
@@ -77,7 +77,7 @@ print("CWD: ", cwd)
 
 # ## Gather all images in the folders
 
-# In[8]:
+# In[7]:
 
 
 # Folders of annotations
@@ -104,6 +104,9 @@ for i, annotation_path in enumerate(annotation_paths):
     # Read image
     img = cv2.imread(annotation_path, cv2.IMREAD_GRAYSCALE)
     print("read ", sep="", end="")
+
+    # Convert black pixels to grayscale of 5
+    img[img == 0] = 5
     
     # Save new image (as PNG)
     save_success = cv2.imwrite(annotation_path, cv2.cvtColor(img, cv2.COLOR_GRAY2RGB))
