@@ -180,3 +180,24 @@ void calc_RoC(cv::Mat& src, cv::Mat& best_fit_l, cv::Mat& best_fit_r)
     // std::cout << "avg = " << avg << std::endl;
     // std::cout << std::endl;
 }
+
+void calc_vehicle_offset(cv::Mat& src, cv::Mat& best_fit_l, cv::Mat& best_fit_r)
+{
+    double eval_at_y = 719;     // bottom of frame
+    double xm_per_pix = 3.7/700;
+    //double ym_per_pix = 30./720;
+    double font_scale = 0.65;
+    double bottom_x_l = best_fit_l.at<double>(2) * pow(eval_at_y, 2) + best_fit_l.at<double>(1) * eval_at_y + best_fit_l.at<double>(0);
+    double bottom_x_r = best_fit_r.at<double>(2) * pow(eval_at_y, 2) + best_fit_r.at<double>(1) * eval_at_y + best_fit_r.at<double>(0);
+    double vehicle_offset = (src.cols / 2) - (bottom_x_l + bottom_x_r) / 2;
+    vehicle_offset *= xm_per_pix;
+    vehicle_offset = ((long) (vehicle_offset * 100)) / 100.0;
+    string s = "offset: " + std::to_string( std::abs(vehicle_offset) ) + "m ";
+    if (vehicle_offset < 0)
+        s += "left";
+    else if (vehicle_offset > 0)
+        s += "right";
+    else
+        s = "offset: center";
+    putText(src, s, Point(500,20), FONT_HERSHEY_DUPLEX, font_scale, Scalar(255,255,255), 1);
+}

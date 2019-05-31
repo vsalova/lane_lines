@@ -20,6 +20,7 @@ clock_t total_time_find_peaks = 0;
 clock_t total_time_window_search = 0;
 clock_t total_time_waypoints = 0;
 clock_t total_time_calc_roc = 0;
+clock_t total_time_calc_offset = 0;
 clock_t total_time_distort_back = 0;
 clock_t total_time_add_weighted = 0;
 
@@ -59,6 +60,8 @@ void print_benchmark_progress() {
     print_time(total_time_waypoints);
     std::cout << "total_time_calc_roc-- ";
     print_time(total_time_calc_roc);
+    std::cout << "total_time_calc_offset-- ";
+    print_time(total_time_calc_offset);
     std::cout << "total_time_distort_back-- ";
     print_time(total_time_distort_back);
     std::cout << "total_time_add_weighted-- ";
@@ -198,6 +201,10 @@ int main(int argc, char *argv[])
             clock_t time_calc_roc = clock();
             calc_RoC(summed, best_fit_l, best_fit_r);
             total_time_calc_roc += clock() - time_calc_roc;
+
+            clock_t time_calc_offset = clock();
+            calc_vehicle_offset(summed, best_fit_l, best_fit_r);
+            total_time_calc_offset += clock() - time_calc_offset;
 
             // cv::warpPerspective(way_point_img, dst, reverse_matrix, Size(1280, 720));
             //cv::Mat color;

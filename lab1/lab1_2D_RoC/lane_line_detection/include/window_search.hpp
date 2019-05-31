@@ -27,6 +27,8 @@ std::vector<std::pair<double, double>> generate_waypoints(cv::Mat& window_img, c
 
 void calc_RoC(cv::Mat& src, cv::Mat& best_fit_l, cv::Mat& best_fit_r);
 
+void calc_vehicle_offset(cv::Mat& src, cv::Mat& best_fit_l, cv::Mat& best_fit_r);
+
 void draw_lanes_waypoints(cv::Mat &src, cv::Mat &dst);
 
 void print_cv_exception_2(cv::Exception& e);
