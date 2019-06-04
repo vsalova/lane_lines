@@ -109,13 +109,16 @@ void window_search(cv::Mat& binary_warped, cv::Mat& window_img,
 
 void window_search_2D(cv::Mat& binary_warped, cv::Mat& window_img,
                    std::vector<std::unique_ptr<LaneLine>>& lane_lines, std::vector<int>& peaks,
-                   int n_windows_max, int margin, int window_height, int minpix, cv::Mat& fitx1, cv::Mat& ploty1,
+                   int n_windows_max, int margin, int window_height, int minpix, double disp, cv::Mat& fitx1, cv::Mat& ploty1,
                    cv::Mat& fitx2, cv::Mat& final_result_img, cv::Mat& best_fit_l, cv::Mat& best_fit_r) {
+
     int half_window_height = window_height / 2;
+    double disp_sqr = disp * disp;     // To make distance calculations not need sqrt
+
     for (int j = 0; j < 2; j++) {   // For each lane
         //int x_current = peaks[j];
-        cv::Point last_center = cv::Point(peaks[j], binary_warped.rows + half_window_height);     // Stored in x,y form
-        cv::Point current_center = cv::Point(peaks[j], binary_warped.rows - half_window_height);
+        cv::Point last_center = cv::Point(peaks[j], binary_warped.rows + (disp / 2));     // Stored in x,y form
+        cv::Point current_center = cv::Point(peaks[j], binary_warped.rows - (disp / 2));
         //int last_delta = 0;
         int win_left; // x
         int win_bottom; // y
@@ -124,21 +127,25 @@ void window_search_2D(cv::Mat& binary_warped, cv::Mat& window_img,
         cv::Mat x_totalv;
         cv::Mat y_totalv;
         cv::Mat ploty, fitx;
-
+        try {   // Better way to stop?
         for (int i = 0; i < n_windows_max; i++) {
             win_left = current_center.x - margin;
             win_right = current_center.x + margin;
             win_bottom = current_center.y + half_window_height;
             win_top = current_center.y - half_window_height;
 
-            // Place rectangle
-            cv::rectangle(window_img,
-                          cv::Point(win_left, win_bottom),
-                          cv::Point(win_right, win_top),
-                          cv::Scalar(0,255,0), 2);
+            // Get window (make sure inside bounds of image)
+            cv::Rect window_rect = get_rect_in_bounds(win_left, win_top, margin * 2, window_height, window_img);
+            win_left = window_rect.x;
+            win_bottom = window_rect.y + window_rect.height;
+            win_right = window_rect.x + window_rect.width;
+            win_top = window_rect.y;
 
+            // Place rectangle
+            cv::rectangle(window_img, cv::Point(win_left, win_bottom), cv::Point(win_right, win_top), cv::Scalar(0,255,0), 2);
             // Find the average of the lane line points
             cv::Mat cropped = binary_warped(cv::Range(win_top, win_bottom), cv::Range(win_left, win_right));
+
             cv::Mat averaged, averaged_x, x_total, y_total;
             cv::findNonZero(cropped, averaged);                 // Find pixels in rectangle
             int num_pixels_in_window = averaged.rows;
@@ -157,15 +164,19 @@ void window_search_2D(cv::Mat& binary_warped, cv::Mat& window_img,
                 int x_avg = (int) cv::mean(x_total)[0];
                 int y_avg = (int) cv::mean(y_total)[0];
 
+                //last_center = current_center;
+                //current_center.x = x_avg;
+                //current_center.y = y_avg;
+                // Take disp step in new direction
+                double current_disp_sqr = std::pow(x_avg - last_center.x, 2) + std::pow(y_avg - last_center.y, 2);
+                double r = disp_sqr / current_disp_sqr;
+                double newx = current_center.x + r*(x_avg - last_center.x);
+                double newy = current_center.y + r*(y_avg - last_center.y);
                 last_center = current_center;
-                current_center.x = x_avg;
-                current_center.y = y_avg;
-
-                // if (cv::mean(x_total)[0] != 0) {
-                //     int mean = (int)cv::mean(x_total)[0];
-                //     last_delta = mean - x_current;
-                //     x_current = mean;
-                // }
+                current_center.x = newx;
+                current_center.y = newy;
+                // current_center.x = (r * (current_center.x - last_center.x)) + last_center.x;
+                // current_center.y = (r * (current_center.y - last_center.y)) + last_center.y;
             }
             else {
                 // Use last difference
@@ -181,6 +192,7 @@ void window_search_2D(cv::Mat& binary_warped, cv::Mat& window_img,
                 binary_warped(cv::Range(win_top,win_bottom),
                 cv::Range(win_left,win_right)) != 0);
         }
+        } catch (Exception e) {}
         x_totalv.convertTo(x_totalv, CV_64F);
         y_totalv.convertTo(y_totalv, CV_64F);
         if (j == 0) {
@@ -325,4 +337,21 @@ void calc_vehicle_offset(cv::Mat& src, cv::Mat& best_fit_l, cv::Mat& best_fit_r)
     else
         s = "offset: center";
     putText(src, s, Point(500,20), FONT_HERSHEY_DUPLEX, font_scale, Scalar(255,255,255), 1);
+}
+
+
+cv::Rect get_rect_in_bounds(int x, int y, int width, int height, cv::Mat &src) {
+    int src_height = src.rows;
+    int src_width  = src.cols;
+
+    if (width < 0) width = 0;
+    if (height < 0) height = 0;
+    if (x < 0) x = 0;
+    if (y < 0) y = 0;
+    if (x + width >= src_width) width = src_width - x - 1;
+    if (y + height >= src_height) height = src_height - y - 1;
+
+    cv::Rect rect (x, y, width, height);
+    //do bounds checking with src
+    return rect;
 }

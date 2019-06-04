@@ -71,13 +71,15 @@ int main(int argc, char *argv[])
         cv::Mat final_result_img(720, 1280, CV_8UC3, Scalar(0,0,0));
         cv::Mat best_fit_l, best_fit_r;     // Coeficients of best fit lines
         cv::cvtColor(binary_warped, image_to_draw_on, cv::COLOR_GRAY2BGR);
-        int margin = 100;
-
         try {
+            int margin = 100;
             int window_height = 30;
-            int max_windows = 100;
+            int max_windows = 10;
+            int min_pixels_thresh = 90;
+            double displacement_between_windows = 40;
             window_search_2D(binary_warped, image_to_draw_on, lanes, peaks, max_windows,
-                margin, window_height, 100, fitx1, ploty1, fitx2, final_result_img, best_fit_l, best_fit_r);
+                margin, window_height, min_pixels_thresh, displacement_between_windows,
+                 fitx1, ploty1, fitx2, final_result_img, best_fit_l, best_fit_r);
             cv::imshow("window search image", image_to_draw_on);
             cv::waitKey();
         }
