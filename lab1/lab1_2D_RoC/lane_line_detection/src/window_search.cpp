@@ -109,10 +109,14 @@ void window_search(cv::Mat& binary_warped, cv::Mat& window_img,
 
 void window_search_2D(cv::Mat& binary_warped, cv::Mat& window_img,
                    std::vector<std::unique_ptr<LaneLine>>& lane_lines, std::vector<int>& peaks,
-                   int n_windows, int margin, int minpix, cv::Mat& fitx1, cv::Mat& ploty1,
+                   int n_windows_max, int margin, int window_height, int minpix, cv::Mat& fitx1, cv::Mat& ploty1,
                    cv::Mat& fitx2, cv::Mat& final_result_img, cv::Mat& best_fit_l, cv::Mat& best_fit_r) {
-    for (int j = 0; j < 2; j++) {
-        int x_current = peaks[j];
+    int half_window_height = window_height / 2;
+    for (int j = 0; j < 2; j++) {   // For each lane
+        //int x_current = peaks[j];
+        cv::Point last_center = cv::Point(peaks[j], binary_warped.rows + half_window_height);     // Stored in x,y form
+        cv::Point current_center = cv::Point(peaks[j], binary_warped.rows - half_window_height);
+        //int last_delta = 0;
         int win_left; // x
         int win_bottom; // y
         int win_right; // x
@@ -121,35 +125,55 @@ void window_search_2D(cv::Mat& binary_warped, cv::Mat& window_img,
         cv::Mat y_totalv;
         cv::Mat ploty, fitx;
 
-        for (int i = 0; i < n_windows; i++) {
-            win_left = x_current - margin;
-            win_right = x_current + margin;
-            win_bottom = binary_warped.rows - (i)*(binary_warped.rows / n_windows);
-            win_top = binary_warped.rows - (i+1)*(binary_warped.rows / n_windows);
+        for (int i = 0; i < n_windows_max; i++) {
+            win_left = current_center.x - margin;
+            win_right = current_center.x + margin;
+            win_bottom = current_center.y + half_window_height;
+            win_top = current_center.y - half_window_height;
 
             // Place rectangle
-            cv::rectangle(window_img, cv::Point(win_left, win_bottom),
-            cv::Point(win_right, win_top), cv::Scalar(0,255,0), 2);
+            cv::rectangle(window_img,
+                          cv::Point(win_left, win_bottom),
+                          cv::Point(win_right, win_top),
+                          cv::Scalar(0,255,0), 2);
 
-            // Rind the average of the lane line points
+            // Find the average of the lane line points
             cv::Mat cropped = binary_warped(cv::Range(win_top, win_bottom), cv::Range(win_left, win_right));
-
             cv::Mat averaged, averaged_x, x_total, y_total;
-            cv::findNonZero(cropped, averaged);
-
-            if (!averaged.empty()) {
+            cv::findNonZero(cropped, averaged);                 // Find pixels in rectangle
+            int num_pixels_in_window = averaged.rows;
+            //std::cout << "Averaged: " << "rows: " << averaged.rows << " cols: " << averaged.cols << std::endl;
+            //if (!averaged.empty()) {
+            if (num_pixels_in_window >= minpix) {
                 cv::extractChannel(averaged, x_total, 0);
                 cv::extractChannel(averaged, y_total, 1);
-
+                // Re-align pixels to original image coordinates
                 x_total += win_left;
                 y_total += win_top;
-
+                // Convert pixels to vector
                 x_totalv.push_back(x_total);
                 y_totalv.push_back(y_total);
 
-                if (cv::mean(x_total)[0] != 0) {
-                    x_current = (int)cv::mean(x_total)[0];
-                }
+                int x_avg = (int) cv::mean(x_total)[0];
+                int y_avg = (int) cv::mean(y_total)[0];
+
+                last_center = current_center;
+                current_center.x = x_avg;
+                current_center.y = y_avg;
+
+                // if (cv::mean(x_total)[0] != 0) {
+                //     int mean = (int)cv::mean(x_total)[0];
+                //     last_delta = mean - x_current;
+                //     x_current = mean;
+                // }
+            }
+            else {
+                // Use last difference
+                int diff_x = current_center.x - last_center.x;
+                int diff_y = current_center.y - last_center.y;
+                last_center = current_center;
+                current_center.x += diff_x;
+                current_center.y += diff_y;
             }
 
             window_img(cv::Range(win_top,win_bottom),

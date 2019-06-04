@@ -74,7 +74,10 @@ int main(int argc, char *argv[])
         int margin = 100;
 
         try {
-            window_search(binary_warped, image_to_draw_on, lanes, peaks, 10, margin, 0, fitx1, ploty1, fitx2, final_result_img, best_fit_l, best_fit_r);
+            int window_height = 30;
+            int max_windows = 100;
+            window_search_2D(binary_warped, image_to_draw_on, lanes, peaks, max_windows,
+                margin, window_height, 100, fitx1, ploty1, fitx2, final_result_img, best_fit_l, best_fit_r);
             cv::imshow("window search image", image_to_draw_on);
             cv::waitKey();
         }
