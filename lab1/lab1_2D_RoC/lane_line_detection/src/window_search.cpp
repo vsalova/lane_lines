@@ -114,11 +114,32 @@ void window_search_2D(cv::Mat& binary_warped, cv::Mat& window_img,
 
     int half_window_height = window_height / 2;
     double disp_sqr = disp * disp;     // To make distance calculations not need sqrt
+    int stop_margin = 30;
+    int stop_left = stop_margin;
+    int stop_top = stop_margin;
+    int stop_right = window_img.cols - stop_margin;
 
     for (int j = 0; j < 2; j++) {   // For each lane
-        //int x_current = peaks[j];
-        cv::Point last_center = cv::Point(peaks[j], binary_warped.rows + (disp / 2));     // Stored in x,y form
-        cv::Point current_center = cv::Point(peaks[j], binary_warped.rows - (disp / 2));
+        // Center first points to reduce oscillations
+        double center_x = (double) peaks[j];
+        cv::Rect first_rect = get_rect_in_bounds(center_x - margin, binary_warped.rows - window_height, margin * 2, window_height, window_img);
+        cv::Mat first_rect_pixels = binary_warped(cv::Range(first_rect.y, first_rect.y + first_rect.height),
+                                                  cv::Range(first_rect.x, first_rect.x + first_rect.width));
+        cv::findNonZero(first_rect_pixels, first_rect_pixels); // Find pixels in rectangle
+        cv::Mat xvals;
+        cv::extractChannel(first_rect_pixels, xvals, 0);
+        if (xvals.rows > 0) {
+            xvals += center_x - margin;
+            int x_avg = (int) cv::mean(xvals)[0];
+            center_x = x_avg;
+        }
+
+        cv::Point last_center = cv::Point(center_x, binary_warped.rows + (disp / 2));     // Stored in x,y form
+        cv::Point current_center = cv::Point(center_x, binary_warped.rows - (disp / 2));
+
+        std::vector<cv::Point> points;
+        points.push_back(last_center);
+
         //int last_delta = 0;
         int win_left; // x
         int win_bottom; // y
@@ -127,8 +148,9 @@ void window_search_2D(cv::Mat& binary_warped, cv::Mat& window_img,
         cv::Mat x_totalv;
         cv::Mat y_totalv;
         cv::Mat ploty, fitx;
-        try {   // Better way to stop?
+        //try {   // Better way to stop?
         for (int i = 0; i < n_windows_max; i++) {
+            points.push_back(current_center);
             win_left = current_center.x - margin;
             win_right = current_center.x + margin;
             win_bottom = current_center.y + half_window_height;
@@ -187,14 +209,22 @@ void window_search_2D(cv::Mat& binary_warped, cv::Mat& window_img,
                 current_center.y += diff_y;
             }
 
+            // Color non-zero pixels
             window_img(cv::Range(win_top,win_bottom),
                 cv::Range(win_left,win_right)).setTo(lane_lines[0]->color,
                 binary_warped(cv::Range(win_top,win_bottom),
                 cv::Range(win_left,win_right)) != 0);
+
+            // Stop when reach left, top, or right of image
+            if (current_center.x < stop_left || current_center.x > stop_right || current_center.y < stop_top)
+                break;
+
         }
-        } catch (Exception e) {}
+        //} catch (Exception e) {}
+
         x_totalv.convertTo(x_totalv, CV_64F);
         y_totalv.convertTo(y_totalv, CV_64F);
+
         if (j == 0) {
             lane_lines[j]->fit(x_totalv, y_totalv, best_fit_l, ploty, fitx, binary_warped);
             fitx1 = fitx;
@@ -205,6 +235,12 @@ void window_search_2D(cv::Mat& binary_warped, cv::Mat& window_img,
             fitx2 = fitx;
             ploty1 = ploty;
         }
+
+
+        // Draw arrows between center points
+        for (unsigned int i = 0; i < points.size() - 1; i++)
+            cv::arrowedLine(window_img, points[i], points[i+1], cv::Scalar(255,255,0), 3);
+
         //cout << fitx << endl;
                     /*
          * NOTE:
