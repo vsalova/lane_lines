@@ -18,9 +18,8 @@ import tensorflow as tf
 #                 # 18 = bicycle
 
 # label_colours = [[128, 64, 128], [244, 35, 231], [102, 102, 156], [190, 153, 153], [153, 153, 153]]
-label_colours = [[0,0,0], [1,1,1], [2,2,2], [3,3,3], [4,4,4]]
-
-
+# label_colours = [[0,0,0], [1,1,1], [2,2,2], [3,3,3], [4,4,4]]
+label_colours = [[5,5,5], [1,1,1], [2,2,2], [3,3,3], [4,4,4]]
 
 matfn = './utils/color150.mat'
 def read_labelcolours(matfn):
