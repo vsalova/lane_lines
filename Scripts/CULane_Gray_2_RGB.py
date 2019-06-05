@@ -93,7 +93,7 @@ print("Number of annotations total: ", CMD_C.OKBLUE, len(annotation_paths), CMD_
 
 # ## Main loop
 
-# In[12]:
+# In[13]:
 
 
 r_ind = 43456  # A random curvy section
@@ -106,7 +106,15 @@ for i, annotation_path in enumerate(annotation_paths):
     print("read ", sep="", end="")
 
     # Convert black pixels to grayscale of 5
-    img[img == 0] = 5
+    #img[img == 0] = 5
+    # Convert all lanes to white
+    #print(img)
+    img[img == 5] = 0    # Convert black pixels back to 0 (they were 5 before)
+    #print(img)
+    img[img != 0] = 255
+    #print(img)
+    #plt.imshow(img)
+    #break
     
     # Save new image (as PNG)
     save_success = cv2.imwrite(annotation_path, cv2.cvtColor(img, cv2.COLOR_GRAY2RGB))
