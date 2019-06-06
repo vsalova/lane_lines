@@ -109,7 +109,7 @@ void window_search(cv::Mat& binary_warped, cv::Mat& window_img,
 
 void window_search_2D(cv::Mat& binary_warped, cv::Mat& window_img,
                    std::vector<std::unique_ptr<LaneLine>>& lane_lines, std::vector<int>& peaks,
-                   int n_windows_max, int margin, int window_height, int minpix, double disp, cv::Mat& fitx1, cv::Mat& ploty1,
+                   int n_windows_max, int margin, int window_height, int minpix, double disp, double max_angle_change, cv::Mat& fitx1, cv::Mat& ploty1,
                    cv::Mat& fitx2, cv::Mat& final_result_img, cv::Mat& best_fit_l, cv::Mat& best_fit_r) {
 
     int half_window_height = window_height / 2;
@@ -190,6 +190,8 @@ void window_search_2D(cv::Mat& binary_warped, cv::Mat& window_img,
                 //current_center.x = x_avg;
                 //current_center.y = y_avg;
                 // Take disp step in new direction
+                double prev_angle = atan2(last_center.y - current_center.y, last_center.x - current_center.x);
+
                 double current_disp_sqr = std::pow(x_avg - last_center.x, 2) + std::pow(y_avg - last_center.y, 2);
                 double r = disp_sqr / current_disp_sqr;
                 double newx = current_center.x + r*(x_avg - last_center.x);
@@ -197,8 +199,18 @@ void window_search_2D(cv::Mat& binary_warped, cv::Mat& window_img,
                 last_center = current_center;
                 current_center.x = newx;
                 current_center.y = newy;
-                // current_center.x = (r * (current_center.x - last_center.x)) + last_center.x;
-                // current_center.y = (r * (current_center.y - last_center.y)) + last_center.y;
+
+                // Make sure angle did not change too much
+                double current_angle = atan2(last_center.y - current_center.y, last_center.x - current_center.x);
+                if (abs(current_angle - prev_angle) > max_angle_change) {
+                    // Limit angle to prev_angle +- max_angle
+                    if (current_angle > prev_angle)     current_angle = prev_angle + max_angle_change;
+                    else                                current_angle = prev_angle - max_angle_change;
+
+                    // Calculate updated current center based on new current angle from last_center
+                    current_center.y = sin(last_center.y - current_center.y) * r + last_center.y;
+                    current_center.x = cos(last_center.x - current_center.x) * r + last_center.x;
+                }
             }
             else {
                 // Use last difference

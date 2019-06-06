@@ -73,12 +73,13 @@ int main(int argc, char *argv[])
         cv::cvtColor(binary_warped, image_to_draw_on, cv::COLOR_GRAY2BGR);
         try {
             int margin = 80;
-            int window_height = 20;
+            int window_height = 40;
             int max_windows = 200;
             int min_pixels_thresh = 1;
-            double displacement_between_windows = 7;
+            double displacement_between_windows = 40;
+            double max_angle_ch = 0.0872665;      //5 degrees
             window_search_2D(binary_warped, image_to_draw_on, lanes, peaks, max_windows,
-                margin, window_height, min_pixels_thresh, displacement_between_windows,
+                margin, window_height, min_pixels_thresh, displacement_between_windows, max_angle_ch,
                  fitx1, ploty1, fitx2, final_result_img, best_fit_l, best_fit_r);
             cv::imshow("window search image", image_to_draw_on);
             cv::waitKey();
