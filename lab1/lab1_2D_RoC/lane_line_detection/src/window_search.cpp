@@ -190,26 +190,27 @@ void window_search_2D(cv::Mat& binary_warped, cv::Mat& window_img,
                 //current_center.x = x_avg;
                 //current_center.y = y_avg;
                 // Take disp step in new direction
-                double prev_angle = atan2(last_center.y - current_center.y, last_center.x - current_center.x);
-
+                double prev_angle = atan2(last_center.y - current_center.y, current_center.x - last_center.x);
                 double current_disp_sqr = std::pow(x_avg - last_center.x, 2) + std::pow(y_avg - last_center.y, 2);
                 double r = disp_sqr / current_disp_sqr;
-                double newx = current_center.x + r*(x_avg - last_center.x);
-                double newy = current_center.y + r*(y_avg - last_center.y);
+                double newx = current_center.x + r * (x_avg - last_center.x);
+                double newy = current_center.y + r * (y_avg - last_center.y);
                 last_center = current_center;
                 current_center.x = newx;
                 current_center.y = newy;
 
                 // Make sure angle did not change too much
-                double current_angle = atan2(last_center.y - current_center.y, last_center.x - current_center.x);
+                double current_angle = atan2(last_center.y - current_center.y, current_center.x - last_center.x);
                 if (abs(current_angle - prev_angle) > max_angle_change) {
                     // Limit angle to prev_angle +- max_angle
                     if (current_angle > prev_angle)     current_angle = prev_angle + max_angle_change;
                     else                                current_angle = prev_angle - max_angle_change;
 
                     // Calculate updated current center based on new current angle from last_center
-                    current_center.y = sin(last_center.y - current_center.y) * r + last_center.y;
-                    current_center.x = cos(last_center.x - current_center.x) * r + last_center.x;
+                    // current_center.y = sin(last_center.y - current_center.y) * r - last_center.y;
+                    // current_center.x = cos(last_center.x - current_center.x) * r + last_center.x;
+                    current_center.y = last_center.y - sin(current_angle) * disp;
+                    current_center.x = last_center.x + cos(current_angle) * disp;
                 }
             }
             else {
@@ -250,8 +251,10 @@ void window_search_2D(cv::Mat& binary_warped, cv::Mat& window_img,
 
 
         // Draw arrows between center points
-        for (unsigned int i = 0; i < points.size() - 1; i++)
+        for (unsigned int i = 0; i < points.size() - 1; i++) {
+            points[i].y += 5;   // Just to visually separate the arrows
             cv::arrowedLine(window_img, points[i], points[i+1], cv::Scalar(255,255,0), 3);
+        }
 
         //cout << fitx << endl;
                     /*
