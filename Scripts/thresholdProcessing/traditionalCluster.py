@@ -5,14 +5,13 @@ import time
 import hdbscan
 import sklearn.cluster
 import sklearn.linear_model
-from sklearn import svm
+
 
 def findCentroid(cluster):
     sumX = 0
     sumY = 0
 
     for i in cluster:
-        #import pdb; pdb.set_trace()
         sumX += i[0]
         sumY += i[1]
     centroid = [sumX/len(cluster), sumY/len(cluster)]
@@ -25,14 +24,18 @@ def findTopXVal(cluster):
     for i in cluster:
         pointX = i[0]
         pointY = i[1]
-        if(maxY > pointY):
-            continue
-        elif(pointY > maxY):
+
+        if(pointY > maxY):
             maxY = pointY
             xVals.clear()
             xVals.append(pointX)
+
+        elif(maxY > pointY):
+            continue
+
         else: #pointY = maxY
             xVals.append(pointX)
+
     for i in xVals:
         xAvg += i
     return [xAvg / len(xVals), maxY]
@@ -84,16 +87,20 @@ def cluster(filepath):
     #whiteNice = whiteNice.transpose()
     plt.figure(figsize=(12,12))
 
-    plt.subplot(321)
-    plt.scatter(whiteNice[0], whiteNice[1])
-
-    hdbscan_ = hdbscan.HDBSCAN(min_cluster_size=6, min_samples=4)
+    #plt.subplot(321)
+    #plt.scatter(whiteNice[0], whiteNice[1])
+    #plt.title('Thresholded Image Bitmap')
+    #plt.savefig('bitmap.png')
+    #plt.clf()
+    hdbscan_ = hdbscan.HDBSCAN(min_cluster_size=5, min_samples=3)
 
     start_time = time.time()
     hdbscan_.fit(whiteNice.transpose())
+
+
     time_taken = time.time() - start_time
     labels = hdbscan_.labels_
-    print('data-specific time hdbscan: ', time_taken)
+    #print('data-specific time hdbscan: ', time_taken)
     plt.subplot(322)
     plt.scatter(whiteNice[0], whiteNice[1], c=labels)
 
@@ -111,8 +118,10 @@ def cluster(filepath):
     KMeans = sklearn.cluster.KMeans(n_clusters=2, init=z)
     KMeans.fit_predict(newPoints)
 
-    plt.subplot(323)
     plt.scatter(x, y, c=KMeans.labels_)
+    plt.title('Initial HDBScan Clustering')
+    plt.savefig('cluster1.png')
+    plt.clf()
     #plt.show()
 
     clusters = groupBasic(2, KMeans.labels_, [x]+[y])
@@ -132,14 +141,20 @@ def cluster(filepath):
 
     # clf = svm.SVC(kernel='linear', C = 1.0)
     # clf.fit(x1,y1)
-    # import pdb; pdb.set_trace()
+    #import pdb; pdb.set_trace()
+    plt.scatter(x1, y1)
+    plt.scatter(x2, y2)
     x1 = np.asarray(x1)
-    x2 = np.asarray(x2)
+    x2 = np.asarray(x2)[0:2]
     y1 = np.asarray(y1)
-    y2 = np.asarray(y2)
-
+    y2 = np.asarray(y2)[0:2]
+    #import pdb; pdb.set_trace()
+    start_time = time.time()
     linreg1 = sklearn.linear_model.LinearRegression().fit(x1.reshape((-1,1)),y1)
     linreg2 = sklearn.linear_model.LinearRegression().fit(x2.reshape((-1,1)),y2)
+    time_taken = time.time() - start_time
+    #print('data-specific time hdbscan: ', time_taken)
+
     spaceleft = np.linspace(300,400,100)
     spaceright = np.linspace(900,1000, 100)
     plt.plot(spaceleft, linreg1.predict(spaceleft[:, np.newaxis]))
@@ -148,8 +163,9 @@ def cluster(filepath):
     plt.xlim(250,1150)
     plt.ylim(-50,750)
     #import pdb; pdb.set_trace()
-    plt.show()
-    plt.savefig('final.png')
+    plt.title('Secondary KMeans and regression')
+    plt.savefig('cluster2.png')
+    plt.clf()
     #import pdb; pdb.set_trace()
 
 # cv2.imshow('image', whiteNice)
