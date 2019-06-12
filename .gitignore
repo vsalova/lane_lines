@@ -68,6 +68,10 @@ Scripts/culane_dataset_lanenet/
 /Scripts/COMBINED_VIDEO_POST_PROCESS.avi
 
 
+/SCNN/SCNN-Tensorflow/lane-detection-model/weights.zip
+/SCNN/SCNN-Tensorflow/lane-detection-model/Anaconda3-5.0.1-Linux-x86_64.sh
+
+
 #LaTeX ignores
 *.aux
 *.bib

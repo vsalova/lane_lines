@@ -84,13 +84,13 @@ class TrainConfig(Config):
     # Set hyperparameters here, you can get much more setting in Config Class, see 'utils/config.py' for details.
     LAMBDA1 = 0.16
     LAMBDA2 = 0.4
-    LAMBDA3 = 1.0
+    # LAMBDA3 = 1.0
+    LAMBDA3 = 0.8
     BATCH_SIZE = 8
     LEARNING_RATE = 5e-4
 
 def main():
     """Create the model and start the training."""
-    #print("TESTING THIS HERE OMG HELLOOOOOOOOOOOOOO  ", tf.test.is_gpu_available())
     args = get_arguments()
 
     """
