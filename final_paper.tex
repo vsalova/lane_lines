@@ -23,9 +23,6 @@
 
 \usepackage{graphicx}
 \usepackage{amsmath}
-% \usepackage{subcaption}
-
-\usepackage{blindtext} % Package to generate dummy text throughout this template
 
 \usepackage[sc]{mathpazo} % Use the Palatino font
 \usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
@@ -55,10 +52,8 @@
 
 \usepackage{fancyhdr} % Headers and footers
 \pagestyle{fancy} % All pages have headers and footers
-\fancyhead{} % Blank out the default header
-\fancyfoot{} % Blank out the default footer
-\fancyhead[C]{Running title $\bullet$ May 2016 $\bullet$ Vol. XXI, No. 1} % Custom header text
-\fancyfoot[RO,LE]{\thepage} % Custom footer text
+
+% \fancyfoot[RO,LE]{\thepage} % Custom footer text
 
 \usepackage{titling} % Customizing the title section
 
@@ -177,6 +172,38 @@ offset &= \frac{W_{window}}{2} - center
 \end{align}
 \end{subequations}
 
+\subsection{Replacements for window search - Daniel}
+\begin{figure}
+  \includegraphics[width=\linewidth]{daniel1.png}
+  \caption{caption}
+  \label{fig:d1}
+\end{figure}
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{daniel2.png}
+  \caption{caption}
+  \label{fig:d2}
+\end{figure}
+
+\par The traditional computer vision approach to lane line detection is considered to simpler and less resource intensive than a neural network based approach. At the beginning of this project, a 5 stage modular pipeline (undistort image, RoI, thresholding, recursive window search, polyfit) was initially considered for modification. The recursive window search module was identified as an algorithm that could be replaced by a faster module due to its recursive nature.
+\par Since clustering can be ran on all points in an image or bitmap, the motivation was to replace the recursive window search algorithm with a series of clustering algorithms, both to reduce noise and find lane lines in a non-recursive fashion. In order to do this, multiple clustering algorithms needed to be tested. It can be seen in figure \ref{fig:d1} the results of a benchmark test done on bitmaps of similar size and density to the ones that the previous thresholding step would produce. The sklearn k-means clustering algorithm stood out as a very fast clustering algorithm, although using this kmeans would mean that the number of lanes must be known beforehand. HDBscan tests as a fairly slow algorithm but comes with the added functionality of identifying and filtering out points the algorithm deems noise.
+\par The proposed clustering module has two steps. Initially, a bitmap is taken in from the thresholding module (figure \ref{fig:d2}). HDBscan is applied first to the bitmap to group points into initial clusters, while also removing noise (figure \ref{fig:d3}). Then, for each cluster a centroid point and a top y-value point are selected. After the centroid and y-value pairs are identified, they are clustered into left and right lanes using k-means clustering. After the k-means clustering, linear regression is run to estimate where the lines are (figure \ref{fig:d4}).
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{daniel3.png}
+  \caption{caption}
+  \label{fig:d3}
+\end{figure}
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{daniel4.png}
+  \caption{caption}
+  \label{fig:d4}
+\end{figure}
+
+\par This clustering module ends up running at approximately 1.4 FPS, with limitations on what sort of noise it can handle in input images. Additionally, the clustering module is not able to handle curved lane lines, since it assumes a straight line is drawn between the centroid and high y-value pairing. HDBscan is most responsible for the low speed of this module. Changing parameters such as min\_cluster\_size and min\_samples can result in a speed up but run the risk of decreasing accuracy. Future work on this module can be done in three areas - increasing resilience to noise, adding curve lane line prediction functionality, and increasing speed. Solving one of these problems might affect the solution of another; since HDBscan is used in part to remove noise, a new solution to noise in the bitmap might eliminate the need for HDBscan altogether, which might yield a speed increase.
+
+
 \subsection{Initial foray into 2D Window search - Calvin}
 \par One additional avenue to improve upon the original pipeline is to make the window search algorithm more robust to highly curved lanes. In order to do this, we needed to overcome the implicit limitation of the one-dimensional window search, which is that it can only detect lanes at most at a 45 degree angle. For most driving circumstances this limitation is not an issue, but there are situations such at roundabouts or parking lots where it is necessary to detect sharp turns.
 \par In order to turn the one-dimensional window search into two-dimensions, we need turn the displacement of the window from a one dimensional update in the y dimension into a displacement in any direction. Making the displacement into a vector brings a lot of uncertainty about when the algorithm will terminate. It is impossible to know the number of steps the algorithm will take beforehand, as opposed to one-dimensional window search which always terminates in a specified number of steps (which determines the window height).
@@ -208,8 +235,9 @@ Another possible stopping conditions is to only allow the search to go “up” 
 \section{Deep Learning Approaches}
 
 \subsection{SCNN - Victoria}
-\par Spatial CNN is a generalization of deep convolutional to a spatial level. SCNN views rows and columns of feature maps as layers and applies convolution and nonlinear activation sequentially, forming a deep neural network. The advantages of SCNN over other lane line detection methods are the fact that sequential message pass scheme is more computationally efficient than other RNN or Markov Random Field approaches. Spatial CNN is computationally efficient and also flexible. SCNN distinguishes each lane line as its own class, creates a probability map for each, which give prediction on the existence of the lane line markings. After that, these predictions are connected by cubic splines to create the final predictions of the lane lines. In this paper, SCNN was compared to ReNet, MRFNet, DenseCRF, and the very deep residual network. Out of all the methods listed, SCNN performed significantly better, showing the best results.
+\par The first neural net we looked at was Spatial CNN. It is a generalization of deep convolutional to a spatial level and it outperforms recurrent neural nets, Markov random fields and conditional Random field, by both speed and accuracy.  SCNN views rows and columns of feature maps as layers and applies convolution and nonlinear activation sequentially, forming a deep neural network. The advantage of SCNN over other lane line detection methods is the fact that sequential message pass scheme is more computationally efficient than other RNN or Markov Random Field approaches - it gets rid of computational redundancy that other models have. It utilizes sequential propagation scheme instead of each node receiving messages from all others. So information goes  from right to left and top to bottom, so 4 directions, which results in the amount of information being passed, but with less computation. SCNN can also be incorporated into any part of CNN, rather than just the output. The ablation study that was done on SCNN shows that every part of this network is important  and not redundant. SCNN distinguishes each lane line as its own class, creates a probability map for each, which give prediction on the existence of the lane line markings. After that, these predictions are connected by cubic splines to create the final predictions of the lane lines. In this paper, SCNN was compared to ReNet, MRFNet, DenseCRF, and the very deep residual network. Out of all the methods listed, SCNN performed significantly better, showing the best results.
 
+\par In order to get this model running, we spent a significant amount of time setting up a proper docker container that would allow us to use the GPU for training. We also edited parts of the training script, updating the outdated tensorflow functions as well as editing the scripts to train on CULane dataset. Unfortunately, we decided not to proceed with this model as we realized we did not have the hardware to train this model. The last error that we ran into was GPU running out of memory. The attempts to decrease the batch size and other configuration settiongs to decresea the memory used turned out unsuccessful and we decided not to proceed with this model.
 
 
 \subsection{LaneNet post-processing - Calvin}
@@ -220,8 +248,6 @@ Another possible stopping conditions is to only allow the search to go “up” 
 
 
 \subsection{ICNet - Victoria}
-\par The next deep learning approach we looked at was ICNet. The reason for this choice was that ICNet is one of the only semantic segmentation models that can run close to real time. The way ICNet works is that it downsamples a large input image by 1/2 and then by 1/4. The smallest image is ran through a heavy cnn and the two smaller ones are ran through a light cnn. A cascade feature fusion unit is then used to combine the results of the images to refine the segmentation in the higher resolution image. The reason ICNet is able to run so quickly while maintaining accuracy is because a heavy cnn is ran only on the smallest image, taking significantly less time than if it were run on the original image, so the run time is shortened significantly.
-\par Just as with SCNN, the set up took a significant amount of time. The biggest challenge was finding the correct docker image that would allow us to train our model on the GPU. The model for the code that we used and its documentation were outdated, so we had to adapt the code to run on our systems. Most of the initial updates were debugging and replacing the outdated tensorflow functions.
 
 \begin{figure}
   \includegraphics[width=\linewidth]{1.png}
@@ -229,7 +255,8 @@ Another possible stopping conditions is to only allow the search to go “up” 
   \label{fig:first}
 \end{figure}
 
-\par Since ICNet was designed as a semantic segmentation model for scene understanding and trained on Cityscapes dataset, we couldn't use the pretrained weights and had to train the model from scratch. On average, it took about 14 hours to run the 60000 steps to train the model. The first run did not produce any results and just classified the entire image as background. Since we are trying to convert this model to predict lane line (which is a semantic segmentation subproblem) and are using the CULane dataset instead of Cityscapes, we had to refactor some parts of the training and evaluating scripts. First step was to relabel the CULane labeled images to have RGB labels, instead of grayscale. Another step was also to change the labels in the model. The CULane dataset consists of 5 labels -- 4 lane lines and background. Each lane line from left to right has its own class and there could be up to 4 lane lines labeled in each image. The labels also go through the obstacles in the image, such as cars, and are drawn over that, even if the actual lane line is not present in the image.  After that, we trained the model for the first time using the arbitrary parameters that were used in the original ICNet implementation. After the first training, the evaluation showed 19% IoU and the result in figure \ref{fig:first} shows only one of the labels, but it is very clear that the label is all over the place.
+\par The next deep learning approach we looked at was ICNet. The reason for this choice was that ICNet is one of the only semantic segmentation models that can run close to real time. The way ICNet works is that it downsamples a large input image by 1/2 and then by 1/4. The smallest image is ran through a heavy cnn and the two smaller ones are ran through a light cnn. A cascade feature fusion unit is then used to combine the results of the images to refine the segmentation in the higher resolution image. The reason ICNet is able to run so quickly while maintaining accuracy is because a heavy cnn is ran only on the smallest image, taking significantly less time than if it were run on the original image, so the run time is shortened significantly.
+\par Just as with SCNN, the set up took a significant amount of time. The biggest challenge was finding the correct docker image that would allow us to train our model on the GPU. The model for the code that we used and its documentation were outdated, so we had to adapt the code to run on our systems. Most of the initial updates were debugging and replacing the outdated tensorflow functions.
 
 \begin{figure}
   \includegraphics[width=\linewidth]{2.png}
@@ -249,8 +276,8 @@ Another possible stopping conditions is to only allow the search to go “up” 
   \label{fig:weights3}
 \end{figure}
 
+\par Since ICNet was designed as a semantic segmentation model for scene understanding and trained on Cityscapes dataset, we couldn't use the pretrained weights and had to train the model from scratch. On average, it took about 14 hours to run the 60000 steps to train the model. The first run did not produce any results and just classified the entire image as background. Since we are trying to convert this model to predict lane line (which is a semantic segmentation subproblem) and are using the CULane dataset instead of Cityscapes, we had to refactor some parts of the training and evaluating scripts. First step was to relabel the CULane labeled images to have RGB labels, instead of grayscale. Another step was also to change the labels in the model. The CULane dataset consists of 5 labels -- 4 lane lines and background. Each lane line from left to right has its own class and there could be up to 4 lane lines labeled in each image (figure \ref{fig:labels1}). The labels also go through the obstacles in the image, such as cars, and are drawn over that, even if the actual lane line is not present in the image.  After that, we trained the model for the first time using the arbitrary parameters that were used in the original ICNet implementation. After the first training, the evaluation showed 19% IoU and the result in figure \ref{fig:first} shows only one of the labels, but it is very clear that the label is all over the place.
 
-\par For the next step, we tried adjusting weights differently for each of the images, getting slightly better results, but still needing more tuning.
 
 \begin{figure}
   \includegraphics[width=\linewidth]{5.png}
@@ -258,13 +285,15 @@ Another possible stopping conditions is to only allow the search to go “up” 
   \label{fig:best}
 \end{figure}
 
+\par For the next step, we tried adjusting weights differently for each of the images, getting slightly better results, but still needing more tuning, figures \label{fig:weights1}, \label{fig:weights2}, \label{fig:weights3}.
+
 \begin{figure}
   \includegraphics[width=\linewidth]{6.png}
   \caption{The image with less occlusions.}
   \label{fig:occlusions}
 \end{figure}
 
-\par The figures ONE use the same weights, but figure ONE has a less occluded environment. The IoU for this iteration was about 86\%. In the figures, the label colors do not match exactly. But it is obvious in the last image, that the labels are encompassing the entire lane lines, and the surrounding areas as well, which is a problem throughout all the iterations above—the entire image is labeled using the labels, ignoring the background completely. As we looked through the code, there was an ignore label in configurations. Eliminating that variable, however, did not change the results, neither did adding a dummy label and setting the ignore label to the dummy label. To fix this problem, we once again relabeled the dataset, but this time we decided to do just a binary classification: lane line and not a lane line. This was the last test we could run before the deadline, and the results were unsatisfactory, where the entire image was labeled as one class.
+\par The figures \ref{fig:best} and \ref{fig:occlusions} use the same weights, but figure \ref{fig:occlusions} has a less occluded environment. The IoU for this iteration was about 86\%. In the figures, the label colors do not match exactly. But it is obvious in the last image, that the labels are encompassing the entire lane lines, and the surrounding areas as well, which is a problem throughout all the iterations above—the entire image is labeled using the labels, ignoring the background completely. As we looked through the code, there was an ignore label in configurations. Eliminating that variable, however, did not change the results, neither did adding a dummy label and setting the ignore label to the dummy label. To fix this problem, we once again relabeled the dataset, figure \ref{fig:labels2}, but this time we decided to do just a binary classification: lane line and not a lane line. This was the last test we could run before the deadline, and the results were unsatisfactory, where the entire image was labeled as one class, figure \ref{fig:badbad}.
 
 \begin{figure}
   \includegraphics[width=\linewidth]{7.png}
@@ -289,6 +318,7 @@ Another possible stopping conditions is to only allow the search to go “up” 
 %------------------------------------------------
 
 \section{Conclusion}
+At the beginning of the quarter, we set a few goals regarding this project. The very first steps were to combine the code from Lab 1 (Victoria) and then find out the speed and accuracy of that code to use as benchmark (Calvin). This gave us a basic structure to improve upon. We then explored different clustering alogrithms and replaced the window search with DBScan clustering technique (Daniel). Our next goals included benchmarking deep learning models, such as SCNN, LaneNet, and ICNet, however, we ran into difficulties running those models. We tried running SCNN and spent most of the time fixing ICNet to work as a lane line detection model (Victoria), and we also looked at the LaneNet model (Calvin). We were also planning on recording our own video and testing the lane line detection models we came up with on that video, but unfortunately we ran into some set backs along the way and did not accomplish this goal.
 
 %----------------------------------------------------------------------------------------
 
