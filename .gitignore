@@ -79,5 +79,4 @@ Scripts/culane_dataset_lanenet/
 *.fdb_latexmk
 *.fls
 *.out
-*.pdf
 *.synctex.gz
